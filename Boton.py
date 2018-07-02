@@ -1,10 +1,10 @@
-class Boton(object):
+class boton(object):
     """
     Esta clase boton contiene su inicializador, funciones de control, como si se pasa el cursor por el boton. Y tambien para colocar
     en pantall el boton"""
     
-    def __init__(self, color, colorSuave, display, texto, posIzquierda, posMedio, ancho, alto, colorTexto, posTexto, anchoDisplay,
-                 altoDisplay, fuente):
+    def __init__(self, color, colorSuave, display, texto, posIzquierda, posMedio, ancho, alto, colorTexto, posTexto, anchoCentroDisplay,
+                 altoCentroDisplay, fuente):
         self.color=color
         self.colorSuave=colorSuave
         self.display=display
@@ -15,17 +15,17 @@ class Boton(object):
         self.alto=alto
         self.colorTexto=colorTexto
         self.posTexto=posTexto
-        self.anchoDisplay=anchoDisplay
-        self.altoDisplay=altoDisplay
+        self.anchoCentroDisplay=anchoCentroDisplay
+        self.altoCentroDisplay=altoCentroDisplay
         self.fuente=fuente
 
     def textoDisplay(self):
         textoDisplay = self.fuente.render(self.texto, True, self.colorTexto)
-        self.display.blit(textoDisplay, [self.anchoDisplay - (textoDisplay.get_rect().width / 2),
-                                        self.altoDisplay + (self.ancho / 2) - (textoDisplay.get_rect().height / 2)
+        self.display.blit(textoDisplay, [self.anchoCentroDisplay - (textoDisplay.get_rect().width / 2),
+                                        self.altoCentroDisplay + (self.alto / 2) - (textoDisplay.get_rect().height / 2)
                                         + self.posTexto])
 
-    def mostarBoton(self):
+    def mostrarBoton(self):
         self.display.fill(self.color, (self.posIzquierda, self.posMedio, self.ancho, self.alto))
         self.textoDisplay()
 
