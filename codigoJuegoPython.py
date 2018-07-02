@@ -45,7 +45,12 @@ def mostrarImagenes(pantalla):
 		pantalla.blit(imagen, (x, y))
 		pygame.display.update()
 		x = x+300
+def botonIzquierdoMouseClickeado():
+    return pygame.mouse.get_pressed()[0]
 
+def getCursorPos():
+    return pygame.mouse.get_pos()
+    
 def terminate():
 	pygame.quit()
 	sys.exit()
