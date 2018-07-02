@@ -28,6 +28,7 @@ ALTOBOTON=50
 ANCHOCENTROVENTANA= ANCHOVENTANA / 2
 ALTOCENTROVENTANA= ALTOVENTANA / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
+CLOCK = pygame.time.Clock()
 
 
 pantalla = pygame.display.set_mode((ANCHOVENTANA, ALTOVENTANA))
@@ -47,19 +48,27 @@ def main():
 	while True:
 		chequearQuit()
 
+def agregarMatriz(imagen, matriz, i, x, y):
+		matriz.append([])
+		r = pygame.Rect(0+x, 0+y+imagen.get_rect()[3], imagen.get_rect()[2], imagen.get_rect()[3])
+		matriz[i].append(r)
+
 def mostrarImagenes(pantalla):
-	x = 100
+	matriz = []
+	x = 0
 	y = 100
-	for i in range(1,6):
+	for i in range(0,5):
 		im = randint(1, len(IMAGENES)-1)
 		while(IMAGENESVIS[im]):
 			im = randint(1, len(IMAGENES)-1)
 		imagen = pygame.image.load(DIRIMAGENES+os.sep+IMAGENES[im])
 		imagen = pygame.transform.rotozoom(imagen, 0, .8)
+		agregarMatriz(imagen, matriz, i, x, y)
 		IMAGENESVIS[im] = True
 		pantalla.blit(imagen, (x, y))
 		pygame.display.update()
 		x = x+300
+	print(matriz)
 		
 def pantallaInicio():
     """
