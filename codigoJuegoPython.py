@@ -1,6 +1,5 @@
-import pygame, sys, os, glob
+import pygame, sys, os
 from pygame.locals import *
-from PIL import Image
 from random import randint
 
 DIRIMAGENES = r"./imagenes"
@@ -24,30 +23,28 @@ IMAGENESVIS = [False]*len(IMAGENES)
 
 
 def main():
-	y = 100
-	x = 100
-	i = 0
 	pygame.init()
 	pantalla = pygame.display.set_mode((ANCHOVENTANA, ALTOVENTANA))
 	pygame.display.set_caption('Prueba')
 	pantalla.fill(BRIGHTGREEN)
 	pygame.display.update()
-	print(IMAGENES)
-	try:
-		for i in range(1,6):
-			im = randint(1, len(IMAGENES)-1)
-			while(IMAGENESVIS[im]):
-				im = randint(1, len(IMAGENES)-1)
-			imagen = pygame.image.load(DIRIMAGENES+os.sep+IMAGENES[im])
-			IMAGENESVIS[im] = True
-			pantalla.blit(imagen, (x, y))
-			pygame.display.update()
-			x = x+200
-	except IndexError:
-		print(error)
-		chequearQuit()
+	mostrarImagenes(pantalla)
 	while True:
 		chequearQuit()
+
+def mostrarImagenes(pantalla):
+	x = 100
+	y = 100
+	for i in range(1,6):
+		im = randint(1, len(IMAGENES)-1)
+		while(IMAGENESVIS[im]):
+			im = randint(1, len(IMAGENES)-1)
+		imagen = pygame.image.load(DIRIMAGENES+os.sep+IMAGENES[im])
+		imagen = pygame.transform.rotozoom(imagen, 0, .8)
+		IMAGENESVIS[im] = True
+		pantalla.blit(imagen, (x, y))
+		pygame.display.update()
+		x = x+300
 
 def terminate():
 	pygame.quit()
