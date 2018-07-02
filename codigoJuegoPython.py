@@ -1,6 +1,9 @@
 import pygame, sys, os
 from pygame.locals import *
 from random import randint
+import Boton
+
+pygame.init()
 
 DIRIMAGENES = r"./imagenes"
 
@@ -20,11 +23,23 @@ ANCHOVENTANA = 1600
 ALTOVENTANA = 900
 IMAGENES = [f for f in os.listdir(DIRIMAGENES) if os.path.splitext(f)[-1] == '.png']
 IMAGENESVIS = [False]*len(IMAGENES)
+ANCHOBOTON=150
+ALTOBOTON=50
+ANCHOCENTROVENTANA= ANCHOVENTANA / 2
+ALTOCENTROVENTANA= ALTOVENTANA / 2
+FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 
 
+pantalla = pygame.display.set_mode((ANCHOVENTANA, ALTOVENTANA))
+
+botonInicio = Boton.boton(RED, BLUE, pantalla, "INICIAR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
+
+botonSalir = Boton.boton(RED, BLUE, pantalla, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                           ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
+                           ALTOCENTROVENTANA, FUENTEBOTON)
 def main():
-	pygame.init()
-	pantalla = pygame.display.set_mode((ANCHOVENTANA, ALTOVENTANA))
 	pygame.display.set_caption('Prueba')
 	pantalla.fill(BRIGHTGREEN)
 	pygame.display.update()
@@ -45,6 +60,29 @@ def mostrarImagenes(pantalla):
 		pantalla.blit(imagen, (x, y))
 		pygame.display.update()
 		x = x+300
+		
+def pantallaInicio():
+    """
+    Carga la pantalla inicial del juego
+    """
+    
+    while True:
+
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                terminate()
+
+        botonInicio.mostrarBoton()
+        botonSalir.mostrarBoton()
+
+        if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            return
+        elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            terminate()
+
+        pygame.display.update()
+        
 def botonIzquierdoMouseClickeado():
     return pygame.mouse.get_pressed()[0]
 
@@ -67,4 +105,8 @@ def chequearQuit():
 
 
 if __name__ == '__main__':
+	pygame.display.set_caption('Prueba')
+	pantalla.fill(BRIGHTGREEN)
+	pygame.display.update()
+	pantallaInicio()
 	main()
