@@ -34,3 +34,4 @@ class boton(object):
             self.display.fill(self.colorSuave, (self.posIzquierda, self.posMedio, self.ancho, self.alto))
             self.textoDisplay()
             return True
+            
