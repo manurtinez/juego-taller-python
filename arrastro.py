@@ -16,8 +16,8 @@ while True:
 			exit()
 	if pygame.mouse.get_pressed()[0]==1:
 		x,y = pygame.mouse.get_pos()
-		x-=400
-		y-=200
+		x-=300
+		y-=250
 		pantalla.blit(imagen,(x,y))
 		pygame.display.flip()
 	pantalla.blit(imagen,(x,y))
