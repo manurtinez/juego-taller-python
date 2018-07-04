@@ -32,7 +32,7 @@ clock = pygame.time.Clock()
 
 #musica
 
-pygame.mixer.music.set_volume(0.9)
+pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
 pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
@@ -52,7 +52,7 @@ def main():
 	pygame.display.set_caption('Prueba')
 	pantalla.fill(BRIGHTGREEN)
 	pygame.display.update()
-	mostrarImagenes(pantalla)
+	lis= mostrarImagenes(pantalla)
 	pygame.mixer.music.play(-1, 0.0)
 	reproduccionMusica= True
 	while True:
@@ -70,24 +70,20 @@ def main():
 					else:
 						pygame.mixer.music.unpause()
 						reproduccionMusica= True
-
-		
-		#print (x, y)
+			if event.type == MOUSEMOTION:
+				if pygame.mouse.get_pressed()[0]:
+					x,y =event.pos
+					x-=100
+					y-=100
+					pantalla.blit(lis[0][0],(x,y), lis[0][1])       #deberia ser dependiendo el rectangulo donde se haga click
+					pygame.display.flip()
+			#print (x, y)
 		pygame.display.update()
-		clock.tick(30)
-		
-		
-		
+		clock.tick(25)
 		
 
-def agregarMatriz(imagen, matriz, i, x, y, lista):
-		matriz.append([])
-		r = pygame.Rect(0+x, 0+y+imagen.get_rect()[3], imagen.get_rect()[2], imagen.get_rect()[3])
-		matriz[i].append(r)
-		lista.append(r)
 
 def mostrarImagenes(pantalla):
-	matriz = []
 	lista=[]
 	x = 0
 	y = 100
@@ -97,13 +93,14 @@ def mostrarImagenes(pantalla):
 			im = randint(1, len(IMAGENES)-1)
 		imagen = pygame.image.load(DIRIMAGENES+os.sep+IMAGENES[im])
 		imagen = pygame.transform.rotozoom(imagen, 0, .8)
-		agregarMatriz(imagen, matriz, i, x, y, lista)
+		imagen_rect= imagen.get_rect()
+		lista.append((imagen, imagen_rect))
 		IMAGENESVIS[im] = True
 		pantalla.blit(imagen, (x, y))
 		pygame.display.update()
 		x = x+300
-	print(matriz)
-	print (lista[1])
+	print (lista)
+	return lista
 		
 def pantallaInicio():
     """
