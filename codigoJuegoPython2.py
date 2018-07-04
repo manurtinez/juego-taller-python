@@ -58,6 +58,8 @@ def main():
 	while True:
 		#x, y= pygame.mouse.get_pos()
 		for event in pygame.event.get():
+			if (event.type == QUIT):
+				terminate()
 			if (event.type == KEYUP):
 				if event.key == K_ESCAPE:
 					terminate()
