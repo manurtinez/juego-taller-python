@@ -1,7 +1,8 @@
 import pygame, sys, os
 from pygame.locals import *
-from random import randint
+from random import randint,randrange
 import Boton
+import random
 
 pygame.init()
 
@@ -55,7 +56,9 @@ def main():
 	lis= mostrarImagenes(pantalla)
 	pygame.mixer.music.play(-1, 0.0)
 	reproduccionMusica= True
+	aleatorio=random.randrange(len(lis))
 	while True:
+		
 		#x, y= pygame.mouse.get_pos()
 		for event in pygame.event.get():
 			if (event.type == QUIT):
@@ -70,14 +73,15 @@ def main():
 					else:
 						pygame.mixer.music.unpause()
 						reproduccionMusica= True
-			if event.type == MOUSEMOTION:
-				if pygame.mouse.get_pressed()[0]:
-					x,y =event.pos
-					x-=100
-					y-=100
-					pantalla.blit(lis[0][0],(x,y), lis[0][1])       #deberia ser dependiendo el rectangulo donde se haga click
-					pygame.display.flip()
-			#print (x, y)
+		
+		if pygame.mouse.get_pressed()[0]:
+					
+			x,y =pygame.mouse.get_pos()
+			x-=100
+			y-=100
+			pantalla.blit(lis[aleatorio][0],(x,y), lis[aleatorio][1])     #deberia ser dependiendo el rectangulo donde se haga click
+			pygame.display.flip()
+
 		pygame.display.update()
 		clock.tick(25)
 		
