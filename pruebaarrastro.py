@@ -131,6 +131,9 @@ def pantallaInicio():
         for event in events:
             if event.type == pygame.QUIT:
                 terminate()
+            if (event.type == KEYUP):
+                if event.key == K_ESCAPE:
+                    terminate()
 
         botonInicio.mostrarBoton()
         botonSalir.mostrarBoton()
