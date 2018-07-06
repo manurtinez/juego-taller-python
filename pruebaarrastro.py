@@ -77,7 +77,7 @@ def correrJuego(player, player2, letra_A):
                     if player.arrastra:
                         player.arrastra=False
                         puntos+=3
-                elif letra_A.rect.colliderect(player2.rect):
+                if letra_A.rect.colliderect(player2.rect):
                     if player2.arrastra:
                         player2.arrastra = False
                         puntos+=3
