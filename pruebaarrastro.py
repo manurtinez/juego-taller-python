@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import time
+import time, sys
+from pygame.locals import *
 import pygame
 from spriteImagen import *
 
@@ -21,13 +22,33 @@ player.image=pygame.transform.rotozoom(player.image,0,.8)
 player2.image=pygame.transform.rotozoom(player.image,0,.8)
 game_over = False
 
-persona=True
+pygame.mixer.music.set_volume(0.5)
+sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
+sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
+pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
-while game_over == False:
+persona=True
+pygame.mixer.music.play(-1, 0.0)
+reproduccionMusica= True
+
+while True:
 	
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			game_over = True
+			pygame.quit()
+			sys.exit()
+		if event.type == pygame.KEYUP:
+			if event.key == pygame.K_ESCAPE:
+				pygame.quit()
+				sys.exit()
+			if event.key == K_m:
+					if (reproduccionMusica):
+						pygame.mixer.music.pause()
+						reproduccionMusica= False
+					else:
+						pygame.mixer.music.unpause()
+						reproduccionMusica= True
+
 	x,y=pygame.mouse.get_pos()
 	if pygame.mouse.get_pressed()[0]:
 		if letra_A.toca (x,y):
@@ -56,5 +77,3 @@ while game_over == False:
 	screen.blit(letra_A.image, letra_A.rect) 
 	pygame.display.flip()
 	clock.tick(200)
-
-pygame.quit ()
