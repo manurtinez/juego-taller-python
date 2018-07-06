@@ -90,23 +90,22 @@ def correrJuego(player, player2, letra_A):
                     else:
                         pygame.mixer.music.unpause()
                         reproduccionMusica= True
-        x,y=pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed()[0]:
-            if letra_A.toca (x,y):
-                print("player2")
-                if letra_A.rect.colliderect(player.rect):
-                    if player.arrastra:
-                        player.arrastra=False
-                        puntos+=3
-                if letra_A.rect.colliderect(player2.rect):
-                    if player2.arrastra:
-                        player2.arrastra = False
-                        puntos+=3
-            else: 
-                if player2.toca(x,y):
-                    player2.handle_event(event)
-                else:
-                    if player.toca(x,y):
+            x,y=pygame.mouse.get_pos()
+            if pygame.mouse.get_pressed()[0]:
+                if letra_A.toca (x,y):
+                    print("player2")
+                    if letra_A.rect.colliderect(player.rect):
+                        if player.arrastra:
+                            player.arrastra=False
+                            puntos+=3
+                    if letra_A.rect.colliderect(player2.rect):
+                        if player2.arrastra:
+                            player2.arrastra = False
+                            puntos+=3
+                else: 
+                    if player2.toca(x,y):
+                        player2.handle_event(event)
+                    elif player.toca(x,y):
                         player.handle_event(event)
        
    

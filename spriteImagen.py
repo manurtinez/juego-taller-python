@@ -11,12 +11,18 @@ class Imagen(pygame.sprite.Sprite):
 		self.nombre=imagen
 		self.arrastra=True
 	
-	def toca(self,x,y):
+	def toca2(self,rectangulo):
+		return self.rect.colliderect(rectangulo)
+
+	def toca(self, x, y):
 		return self.rect.collidepoint(x,y)
 	
 	def set_rect(self,ancho,alto):
 		self.rect.width=ancho
 		self.rect.height=alto
+
+	def get_rect(self):
+		return self.rect
 		
 	def update(self):
 		if pygame.mouse.get_pressed()[0]:
