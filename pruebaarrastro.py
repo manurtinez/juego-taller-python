@@ -33,6 +33,9 @@ ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 
+DIRIMAGENES= "./imagenes/"
+
+
 botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                             ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
@@ -46,7 +49,7 @@ sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
 pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
  
- 
+
  
 def drawScore(score):
     scoreSurf = BASICFONT.render('Score: %s' % (score), True, WHITE)
@@ -72,53 +75,51 @@ def main():
        
    
 def correrJuego(player, player2, letra_A):
-    puntos= 0
-    reproduccionMusica= True
-    drawScore(puntos)
-    while True:
-   
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            if (event.type == KEYUP):
-                if event.key == K_ESCAPE:
-                    terminate()
-                if event.key == K_m:
-                    if reproduccionMusica:
-                        pygame.mixer.music.pause()
-                        reproduccionMusica= False
-                    else:
-                        pygame.mixer.music.unpause()
-                        reproduccionMusica= True
-            x,y=pygame.mouse.get_pos()
-            if pygame.mouse.get_pressed()[0]:
-                if letra_A.toca (x,y):
-                    print("player2")
-                    if letra_A.rect.colliderect(player.rect):
-                        if player.arrastra:
-                            player.arrastra=False
-                            puntos+=3
-                    if letra_A.rect.colliderect(player2.rect):
-                        if player2.arrastra:
-                            player2.arrastra = False
-                            puntos+=3
-                else: 
-                    if player2.toca(x,y):
-                        player2.handle_event(event)
-                    elif player.toca(x,y):
-                        player.handle_event(event)
-       
-   
-        screen.fill(pygame.Color('gray'))
-        if player.arrastra:
-            screen.blit(player.image, player.rect)
-        if player2.arrastra:
-            screen.blit(player2.image, player2.rect)
-        drawScore(puntos)
-        screen.blit(letra_A.image, letra_A.rect)
-        pygame.display.flip()
-        clock.tick(60)
-       
+	puntos= 0
+	reproduccionMusica= True
+	drawScore(puntos)
+	while True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				terminate()
+			if (event.type == KEYUP):
+				if event.key == K_ESCAPE:
+					terminate()
+				if event.key == K_m:
+					if reproduccionMusica:
+						pygame.mixer.music.pause()
+						reproduccionMusica= False
+					else:
+						pygame.mixer.music.unpause()
+						reproduccionMusica= True
+			x,y=pygame.mouse.get_pos()
+			if pygame.mouse.get_pressed()[0]:
+				if letra_A.toca (x,y):
+					print("letra_A")
+					if letra_A.rect.colliderect(player.rect):
+						if player.arrastra:
+							player.arrastra=False
+							puntos+=3
+					if letra_A.rect.colliderect(player2.rect):
+						if player2.arrastra:
+							player2.arrastra = False
+							puntos+=3
+				else:
+					if player2.toca(x,y):
+						player2.handle_event(event)
+					elif player.toca(x,y):
+						player.handle_event(event)
+
+		screen.fill(pygame.Color('gray'))
+		if player.arrastra:
+			screen.blit(player.image, player.rect)
+		if player2.arrastra:
+			screen.blit(player2.image, player2.rect)
+		drawScore(puntos)
+		screen.blit(letra_A.image, letra_A.rect)
+		pygame.display.flip()
+		clock.tick(60)
+		
 def pantallaInicio():
     """
     Carga la pantalla inicial del juego
@@ -157,3 +158,9 @@ def terminate():
 if __name__ == "__main__":
     pantallaInicio()
     main()
+    
+    
+    
+    
+		
+		

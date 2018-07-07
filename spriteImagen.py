@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import pygame
+import os
+from pygame.locals import *
 
 class Imagen(pygame.sprite.Sprite):
-	def __init__(self, position,imagen):
+	def __init__(self, position,imagen, path= os.getcwd()):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(imagen)
 		self.rect = self.image.get_rect()
 		self.rect.topleft=position
-		self.nombre=imagen
+		self.nombre= imagen
 		self.arrastra=True
 	
 	def toca2(self,rectangulo):
@@ -30,12 +32,11 @@ class Imagen(pygame.sprite.Sprite):
 			if self.toca(x,y):
 				print("toca")
 			x-=100
-			y-=100
-			
+			y-=100	
 			self.rect.x=x
-			self.rect.y=y    #deberia ser dependiendo el rectangulo donde se haga click
+			self.rect.y=y    
 			pygame.display.flip()
-	
+			
 	def handle_event(self, event):
 		if event.type == pygame.QUIT:
 			game_over = True
