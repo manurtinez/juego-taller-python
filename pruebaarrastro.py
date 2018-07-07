@@ -4,6 +4,7 @@ import sys
 import pygame
 from pygame.locals import *
 from spriteImagen import *
+import random
  
 WHITE = (255, 255, 255)
 BLACK = (  0,   0,   0)
@@ -54,7 +55,7 @@ pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
  
 def drawScore(score):
-    scoreSurf = BASICFONT.render('Score: %s' % (score), True, WHITE)
+    scoreSurf = BASICFONT.render('puntos: %s' % (score), True, WHITE)
     scoreRect = scoreSurf.get_rect()
     scoreRect.topleft = (ancho_ventana - 120, 10)
     screen.blit(scoreSurf, scoreRect)
@@ -65,17 +66,22 @@ def drawScore(score):
  
  
 def main():
-    letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
-    player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
-    player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
-    player2.image=pygame.transform.rotozoom(player.image,0,.8)
-    player.image=pygame.transform.rotozoom(player.image,0,.8)
-    pygame.mixer.music.play(-1, 0.0)
-    persona=True
-    while True:
-        correrJuego(player, player2, letra_A)
-       
-   
+	aux=0           # indice que hace referencia a la letra a usar del diccionario
+	dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
+	letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
+	player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
+	player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
+	player2.image=pygame.transform.rotozoom(player.image,0,.8)
+	player.image=pygame.transform.rotozoom(player.image,0,.8)
+	pygame.mixer.music.play(-1, 0.0)
+	persona=True
+	while True:
+		correrJuego(player, player2, letra_A)
+		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)     #hay q hacer que cuando se complete el nivel de la letra A, 
+																		#se pase al siguiente nivel con esta funcion e incrementando la variable aux
+																		#para que se seleccione la siguiente vocal
+
+
 def correrJuego(player, player2, letra_A):
 	puntos= 0
 	reproduccionMusica= True
@@ -156,8 +162,27 @@ def getCursorPos():
 def terminate():
     pygame.quit()
     sys.exit()
-    
-    
+
+def seleccionDeImagenes(dicc, aux):
+	"""retorna diccionario cargado con 5 imagenes aleatorias"""
+	dicc_aux={}
+	if aux == 0:
+		lis= random.sample(dicc["A"], 5)
+		dicc_aux["A"]= lis
+	elif aux == 1:
+		lis= random.sample(dicc["E"], 5)
+		dicc_aux["E"]= lis
+	elif aux == 2:
+		lis= random.sample(dicc["I"], 5)
+		dicc_aux["I"]= lis
+	elif aux == 3:
+		lis= random.sample(dicc["O"], 5)
+		dicc_aux["O"]= lis
+	elif aux == 4:
+		lis= random.sample(dicc["U"], 5)
+		dicc_aux["U"]= lis
+	return dicc_aux
+		
 def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	"""carga diccionario con todas las imagenes de la ruta"""
 	lista=[]
@@ -166,16 +191,11 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 			for img in os.listdir(ruta+letra):
 				lista.append(img)
 			dicc[letra]= lista
+			lista=[]
 	#print (dicc)
-	return dicc)
+	return (dicc)
  
 if __name__ == "__main__":
     cargarDiccionario(diccionario_imagenes)
     pantallaInicio()
-    main()
-    
-    
-    
-    
-		
-		
+    main()		
