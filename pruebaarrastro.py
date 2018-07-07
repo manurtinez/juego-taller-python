@@ -68,6 +68,7 @@ def drawScore(score):
 def main():
 	aux=0           # indice que hace referencia a la letra a usar del diccionario
 	dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
+	print(dicc_actual)
 	letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
 	player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
 	player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
@@ -102,22 +103,25 @@ def correrJuego(player, player2, letra_A):
 						reproduccionMusica= True
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
-				if letra_A.toca (x,y):
-					print("letra_A")
-					if letra_A.rect.colliderect(player.rect):
-						if player.arrastra:
-							player.arrastra=False
-							puntos+=3
-					if letra_A.rect.colliderect(player2.rect):
-						if player2.arrastra:
-							player2.arrastra = False
-							puntos+=3
-				else:
-					if player2.toca(x,y):
-						player2.handle_event(event)
-					elif player.toca(x,y):
-						player.handle_event(event)
-
+				if player2.toca(x,y):
+					puntos=evaluar(player2,letra_A,event,puntos,player)	
+				elif player.toca(x,y):
+					puntos=evaluar(player,letra_A,event,puntos,player2)		
+#				if letra_A.toca (x,y):
+#					print("letra_A")
+#					if letra_A.rect.colliderect(player.rect):
+#						if player.arrastra:
+#							player.arrastra=False
+#							puntos+=3
+#					if letra_A.rect.colliderect(player2.rect):
+#						if player2.arrastra:
+#							player2.arrastra = False
+#							puntos+=3
+#				else:
+#					if player2.toca(x,y):
+#						player2.handle_event(event)
+#					elif player.toca(x,y):
+#						player.handle_event(event)
 		screen.fill(pygame.Color('gray'))
 		if player.arrastra:
 			screen.blit(player.image, player.rect)
@@ -127,7 +131,37 @@ def correrJuego(player, player2, letra_A):
 		screen.blit(letra_A.image, letra_A.rect)
 		pygame.display.flip()
 		clock.tick(60)
-		
+def evaluar(objeto,objeto_destino,event,puntos,*args):
+	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				terminate()
+			if (event.type == KEYUP):
+				if event.key == K_ESCAPE:
+					terminate()
+				if event.key == K_m:
+					if reproduccionMusica:
+						pygame.mixer.music.pause()
+						reproduccionMusica= False
+					else:
+						pygame.mixer.music.unpause()
+						reproduccionMusica= True
+		screen.fill(pygame.Color('gray'))
+		for obj in args:
+			if obj.arrastra:
+				screen.blit(obj.image,obj.rect)
+		drawScore(puntos)
+		screen.blit(objeto_destino.image, objeto_destino.rect)
+		objeto.handle_event(event,screen)
+		screen.blit(objeto.image,objeto.rect)
+		pygame.display.flip()
+		clock.tick(60)
+	if objeto_destino.rect.colliderect(objeto.rect):
+		if objeto.arrastra:
+			objeto.arrastra=False
+			puntos=puntos+3
+	return puntos
+	
 def pantallaInicio():
     """
     Carga la pantalla inicial del juego
@@ -167,19 +201,29 @@ def seleccionDeImagenes(dicc, aux):
 	"""retorna diccionario cargado con 5 imagenes aleatorias"""
 	dicc_aux={}
 	if aux == 0:
-		lis= random.sample(dicc["A"], 5)
+		lis= random.sample(dicc["A"], 3)
+		lis.append(random.sample(dicc["E"],1))
+		lis.append(random.sample(dicc["I"],1))
 		dicc_aux["A"]= lis
 	elif aux == 1:
-		lis= random.sample(dicc["E"], 5)
+		lis= random.sample(dicc["E"], 3)
+		lis.append(random.sample(dicc["A"],1))
+		lis.append(random.sample(dicc["O"],1))
 		dicc_aux["E"]= lis
 	elif aux == 2:
-		lis= random.sample(dicc["I"], 5)
+		lis= random.sample(dicc["I"], 3)
+		lis.append(random.sample(dicc["U"],1))
+		lis.append(random.sample(dicc["O"],1))
 		dicc_aux["I"]= lis
 	elif aux == 3:
-		lis= random.sample(dicc["O"], 5)
+		lis= random.sample(dicc["O"], 3)
+		lis.append(random.sample(dicc["A"],1))
+		lis.append(random.sample(dicc["E"],1))
 		dicc_aux["O"]= lis
 	elif aux == 4:
-		lis= random.sample(dicc["U"], 5)
+		lis= random.sample(dicc["U"], 3)
+		lis.append(random.sample(dicc["O"],1))
+		lis.append(random.sample(dicc["I"],1))
 		dicc_aux["U"]= lis
 	return dicc_aux
 		
@@ -192,7 +236,7 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 				lista.append(img)
 			dicc[letra]= lista
 			lista=[]
-	#print (dicc)
+	print (dicc)
 	return (dicc)
  
 if __name__ == "__main__":
