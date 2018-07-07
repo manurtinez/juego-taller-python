@@ -36,6 +36,8 @@ screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 DIRIMAGENES= "./imagenes/"
 
 
+diccionario_imagenes= {}
+
 botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                             ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
@@ -154,8 +156,21 @@ def getCursorPos():
 def terminate():
     pygame.quit()
     sys.exit()
+    
+    
+def cargarDiccionario(dicc, ruta= DIRIMAGENES):
+	"""carga diccionario con todas las imagenes de la ruta"""
+	lista=[]
+	for letra in os.listdir(ruta):
+		if os.path.isdir(ruta+letra):
+			for img in os.listdir(ruta+letra):
+				lista.append(img)
+			dicc[letra]= lista
+	#print (dicc)
+	return dicc)
  
 if __name__ == "__main__":
+    cargarDiccionario(diccionario_imagenes)
     pantallaInicio()
     main()
     
