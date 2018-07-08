@@ -20,7 +20,7 @@ BRIGHTYELLOW = (255, 255,   0)
 YELLOW = (155, 155,   0)
 DARKGRAY = ( 40,  40,  40)
  
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
+colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN,BLUE]
 
 pygame.init()
 ancho_ventana = 1320
@@ -52,7 +52,9 @@ botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (AN
 botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                            ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-
+botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
 pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
@@ -67,6 +69,7 @@ def drawScore(score):
     screen.blit(scoreSurf, scoreRect)
  
  
+<<<<<<< HEAD
 # Definimos algunas variables que usaremos en nuestro código
 def modificoArchivoLog(datosJson):
 	ok= False
@@ -93,9 +96,21 @@ def modificoArchivoLog(datosJson):
 
 
 def main(nombre_usuario):
+=======
+
+ 
+ 
+ 
+def main(nombre_usuario):	
+	"""loop principal"""
+>>>>>>> e47a14772451bee5dec981a7a9ad949e2ecc3b80
 	puntos= 0
-	pygame.mixer.music.unpause()
+	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
+	screen.fill(random.choice(colores))
+	drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+	pygame.display.flip()
+	time.sleep(1)
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 		lista_sprites= inicializarImagenes(dicc_actual)
@@ -108,10 +123,11 @@ def main(nombre_usuario):
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
 		if aux!=4:
-			drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/2)
+			drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
 		time.sleep(1)
 																						
+<<<<<<< HEAD
 		aux+=1	
 	screen.fill(random.choice(colores))
 	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
@@ -126,9 +142,18 @@ def main(nombre_usuario):
 	pygame.display.flip()
 	time.sleep(1.5)	
 	pantallaInicio()																	
+=======
+		aux+=1		
+	screen.fill(random.choice(colores))	
+	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
+	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)	
+	pantallaInicio(botonJuegoNuevo)													
+	pygame.display.flip()																	
+>>>>>>> e47a14772451bee5dec981a7a9ad949e2ecc3b80
 
 
 def correrJuego(color,letra,args,puntos):
+	"""loop del juego al clickear en iniciar"""
 	puntosAnt=0
 	correcto=0
 	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
@@ -154,7 +179,7 @@ def correrJuego(color,letra,args,puntos):
 				for objeto in args:
 					if objeto.toca(x,y):
 						puntosAnt = puntos
-						tupla=evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,args)
+						tupla=evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
 						correcto=tupla[1]
 						if(puntosAnt>puntos):
@@ -175,10 +200,12 @@ def correrJuego(color,letra,args,puntos):
 
 
 def drawMensaje(msj, x, y):
+	"""dibuja el puntaje correspondiente"""
 	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
 	screen.blit(msjSurf, (x, y))
 
-def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args):
+def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -199,7 +226,6 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
 		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		#drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
 		screen.blit(objeto_destino.image, objeto_destino.rect)
 		objeto.handle_event(event,screen)
 		screen.blit(objeto.image,objeto.rect)
@@ -215,11 +241,10 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args
 				puntos-= 1
 	return puntos,correcto
 	
-def pantallaInicio():
+def pantallaInicio(boton):
     """
     Carga la pantalla inicial del juego
     """
-    screen.fill(pygame.Color('dark green'))
     while True:
 
         events = pygame.event.get()
@@ -230,11 +255,11 @@ def pantallaInicio():
                 if event.key == K_ESCAPE:
                     terminate()
 
-        botonInicio.mostrarBoton()
+        boton.mostrarBoton()
         botonSalir.mostrarBoton()
 
-        if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-            main(nombre_usuario)
+        if boton.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            return
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
@@ -289,10 +314,10 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 				lista.append(img)
 			dicc[letra]= lista
 			lista=[]
-	print (dicc)
 	return (dicc)
 
 def inicializarImagenes(dicc):
+	"""retorna una lista con las imagenes del directorio"""
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
@@ -302,7 +327,6 @@ def inicializarImagenes(dicc):
 	copy = lis[:]					# mezclo la lista para que las imagenes incorrctas no vayan siempre al final de la pantalla
 	random.shuffle(copy)		
 	lis = copy[:]	
-	print(lis)	                  	#lista con el nombre de cada imagen
 	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+30), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
 	lista_sprites.append(imagen)
 	imagen.set_rect(1, 1)        # mod. rectangulo de letra
@@ -317,13 +341,11 @@ def inicializarImagenes(dicc):
 	return lista_sprites                                         
 											
 def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
+	"""metodo para ingresar un nombre de usuario al iniciar la partida"""
 	FUENTE_NOMBRE_2 = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 	cadena = ""
 	fin = False
-    # create list of allowed characters using ascii values
-    # numbers 1-9, letters a-z
 	valores_permitidos= [i for i in range(97, 123)] + [i for i in range(48,58)]
-    # create blinking underscore
 	EVENT_PARPADEO = pygame.USEREVENT + 0
 	pygame.time.set_timer(EVENT_PARPADEO, 800)
 	ciclo_parpadeo = cycle(["_", " "])
@@ -347,7 +369,6 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 				# lowercase entry
 				else:														#si es minuscula
 					cadena += chr(event.key)
-			# otherwise, only the following are valid inputs
 			elif event.type == KEYUP:											
 				if event.key == K_BACKSPACE:						
 					cadena = cadena[:-1]
@@ -355,13 +376,11 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 					cadena += " "
 				elif event.key == K_RETURN:
 					fin = True
-		# only draw underscore if input is not at max character length
 		if len(cadena) < largo_max:
 			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
 		else:
 			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
 		pygame.display.update()
-	#print (cadena)
 	return cadena
 
 
@@ -376,6 +395,9 @@ if __name__ == "__main__":
 	cargarDiccionario(diccionario_imagenes)
 	pygame.mixer.music.play(-1, 0.0)
 	pygame.mixer.music.pause()
-	nombre_usuario= ingreso_usuario(13)
-	main(nombre_usuario)		
-	pantallaInicio()
+	screen.fill(random.choice(colores))		
+	while True:	
+		pantallaInicio(botonInicio)
+		nombre_usuario= ingreso_usuario(13)
+		main(nombre_usuario)
+		

@@ -27,8 +27,6 @@ class Imagen(pygame.sprite.Sprite):
 	def update(self,pantalla):
 		if pygame.mouse.get_pressed()[0]:
 			x,y =pygame.mouse.get_pos()
-			if self.toca(x,y):
-				print("toca")
 			x-=100
 			y-=100	
 			self.rect.x=x
