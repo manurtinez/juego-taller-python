@@ -20,9 +20,10 @@ BRIGHTYELLOW = (255, 255,   0)
 YELLOW = (155, 155,   0)
 DARKGRAY = ( 40,  40,  40)
  
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
+colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN]
 
 pygame.init()
+pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
 ancho_ventana = 1320
 alto_ventana = 720
 pygame.display.set_caption("Conectar")
@@ -37,7 +38,6 @@ ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
-
 DIRIMAGENES= "./imagenes/"
 
 LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./imagenes/O/", "./imagenes/U/"] 
