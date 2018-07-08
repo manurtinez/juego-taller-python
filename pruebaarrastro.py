@@ -36,6 +36,8 @@ screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 
 DIRIMAGENES= "./imagenes/"
 
+LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./imagenes/O/", "./imagenes/U/"] 
+
 
 diccionario_imagenes= {}
 
@@ -69,15 +71,16 @@ def main():
 	aux=0           # indice que hace referencia a la letra a usar del diccionario
 	dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 	print(dicc_actual)
-	letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
-	player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
-	player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
-	player2.image=pygame.transform.rotozoom(player.image,0,.8)
-	player.image=pygame.transform.rotozoom(player.image,0,.8)
+	lista_sprites= inicializarImagenes(dicc_actual, LISTA_DIR_IMAGENES[aux])
+	# letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
+	# player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
+	# player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
+	# player2.image=pygame.transform.rotozoom(player.image,0,.8)
+	# player.image=pygame.transform.rotozoom(player.image,0,.8)
 	pygame.mixer.music.play(-1, 0.0)
 	persona=True
 	while True:
-		correrJuego(player, player2, letra_A)
+		correrJuego(lista_sprites[0], lista_sprites[1], lista_sprites[2])
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)     #hay q hacer que cuando se complete el nivel de la letra A, 
 																		#se pase al siguiente nivel con esta funcion e incrementando la variable aux
 																		#para que se seleccione la siguiente vocal
@@ -131,6 +134,8 @@ def correrJuego(player, player2, letra_A):
 		screen.blit(letra_A.image, letra_A.rect)
 		pygame.display.flip()
 		clock.tick(60)
+
+
 def evaluar(objeto,objeto_destino,event,puntos,*args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
@@ -238,7 +243,32 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 			lista=[]
 	print (dicc)
 	return (dicc)
- 
+
+def inicializarImagenes(dicc, ruta):
+	global ancho_ventana
+	global alto_ventana
+	lista_sprites=[]
+	letra= list(dicc.keys())[0]
+	lis= dicc[letra]
+	for imagen in lis:
+		if isinstance(imagen, str):
+			print ("hola")
+			imagen= Imagen((ancho_ventana, alto_ventana), ruta+imagen)
+			ancho_ventana-= 250
+			alto_ventana-= 250
+			lista_sprites.append(imagen)
+		else:
+			print (imagen[0])
+			char= imagen[0][0].upper()
+			ruta2= DIRIMAGENES+char+"/"+imagen[0]
+			imagen= Imagen((ancho_ventana, alto_ventana), ruta2)
+			ancho_ventana-= 250
+			alto_ventana-= 250
+			lista_sprites.append(imagen)
+	#print (lista_sprites)
+	return lista_sprites
+	
+	
 if __name__ == "__main__":
     cargarDiccionario(diccionario_imagenes)
     pantallaInicio()
