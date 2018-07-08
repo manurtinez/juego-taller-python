@@ -135,7 +135,6 @@ def correrJuego(color,letra,args):
 def drawMensaje(msj, x, y):
 	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
 	screen.blit(msjSurf, (x, y))
-	pygame.display.update()
 
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj, args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
