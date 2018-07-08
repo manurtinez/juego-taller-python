@@ -6,6 +6,7 @@ from pygame.locals import *
 from spriteImagen import *
 from itertools import cycle
 import random
+import json
  
 WHITE = (255, 255, 255)
 BLACK = (  0,   0,   0)
@@ -67,9 +68,30 @@ def drawScore(score):
  
  
 # Definimos algunas variables que usaremos en nuestro código
- 
- 
- 
+def modificoArchivoLog(datosJson):
+	ok= False
+	aux= False             #para saber si el puntaje actual es menor
+	archivo= open("logs.json", "r")			#el archivo json debe tener por lo menos 1 dato
+	datos_iguales= json.load(archivo)
+	datos_viejos= datos_iguales.copy()
+	for partida in datos_viejos:
+		if partida["nombre"] == datosJson[0]["nombre"]:
+			if partida["puntaje_maximo"] < datosJson[0]["puntaje_maximo"]:
+				partida["puntaje_maximo"]= datosJson[0]["puntaje_maximo"]
+				ok= True
+			else: 
+				aux= True                #significa que no supero su record
+	archivo= open("logs.json", "w")
+	if ok:
+		json.dump(datos_viejos, archivo)
+	elif not(aux):
+		datos_viejos.append(datosJson[0])
+		json.dump(datos_viejos, archivo)
+	else:
+		json.dump(datos_iguales, archivo)
+	archivo.close()
+
+
 def main(nombre_usuario):
 	puntos= 0
 	pygame.mixer.music.unpause()
@@ -93,7 +115,14 @@ def main(nombre_usuario):
 		aux+=1	
 	screen.fill(random.choice(colores))
 	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
-	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)															
+	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)	
+	datosJson =[
+					{
+						"nombre": nombre_usuario,
+						"puntaje_maximo": puntos
+					}
+				]	
+	modificoArchivoLog(datosJson) 														
 	pygame.display.flip()
 	time.sleep(1.5)	
 	pantallaInicio()																	
