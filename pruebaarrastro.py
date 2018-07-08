@@ -207,28 +207,28 @@ def seleccionDeImagenes(dicc, aux):
 	dicc_aux={}
 	if aux == 0:
 		lis= random.sample(dicc["A"], 3)
-		lis.append(random.sample(dicc["E"],1))
-		lis.append(random.sample(dicc["I"],1))
+		lis.append(random.sample(dicc["E"],1)[0])
+		lis.append(random.sample(dicc["I"],1)[0])
 		dicc_aux["A"]= lis
 	elif aux == 1:
 		lis= random.sample(dicc["E"], 3)
-		lis.append(random.sample(dicc["A"],1))
-		lis.append(random.sample(dicc["O"],1))
+		lis.append(random.sample(dicc["A"],1)[0])
+		lis.append(random.sample(dicc["O"],1)[0])
 		dicc_aux["E"]= lis
 	elif aux == 2:
 		lis= random.sample(dicc["I"], 3)
-		lis.append(random.sample(dicc["U"],1))
-		lis.append(random.sample(dicc["O"],1))
+		lis.append(random.sample(dicc["U"],1)[0])
+		lis.append(random.sample(dicc["O"],1)[0])
 		dicc_aux["I"]= lis
 	elif aux == 3:
 		lis= random.sample(dicc["O"], 3)
-		lis.append(random.sample(dicc["A"],1))
-		lis.append(random.sample(dicc["E"],1))
+		lis.append(random.sample(dicc["A"],1)[0])
+		lis.append(random.sample(dicc["E"],1)[0])
 		dicc_aux["O"]= lis
 	elif aux == 4:
 		lis= random.sample(dicc["U"], 3)
-		lis.append(random.sample(dicc["O"],1))
-		lis.append(random.sample(dicc["I"],1))
+		lis.append(random.sample(dicc["O"],1)[0])
+		lis.append(random.sample(dicc["I"],1)[0])
 		dicc_aux["U"]= lis
 	return dicc_aux
 		
@@ -248,28 +248,21 @@ def inicializarImagenes(dicc, ruta):
 	global ancho_ventana
 	global alto_ventana
 	lista_sprites=[]				#lista de los sprites para poder controlar los eventos
-	letra= list(dicc.keys())[0]          # almacena el letra la letra del direc.
+	letra= list(dicc.keys())[0]       # almacena en letra la letra del direc.
 	lis= dicc[letra]				#lista con el nombre de cada imagen
 	for imagen in lis:
-		if isinstance(imagen, str):     #si (es un string): (pq la lista tiene otras listas adentro)
-			imagen= Imagen((ancho_ventana, alto_ventana), ruta+imagen)   
-			ancho_ventana-= 500				#mod. coordenadas para prox imagen
-			alto_ventana-= 500
-			lista_sprites.append(imagen)    #agrego sprite a la lista
-		else:                                # si (es una cosa que NO empieza con "letra"):
-			#print (imagen[0])
-			char= imagen[0][0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
-			ruta2= DIRIMAGENES+char+"/"+imagen[0]        #modifico directorio pq sino no encuentra la imagen, 
-			imagen= Imagen((ancho_ventana, alto_ventana), ruta2)
-			ancho_ventana-= 250
-			alto_ventana-= 250
-			lista_sprites.append(imagen)
-	#print (lista_sprites)
+		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
+		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
+		imagen= Imagen((ancho_ventana, alto_ventana), ruta)
+		ancho_ventana-= 250
+		alto_ventana-= 250
+		lista_sprites.append(imagen)
 	return lista_sprites                     # tambien se podria hacer q devuelva un diccionario, para que sea mas facil distinguir las
 											 # imagenes en los eventos
 	
 	
 if __name__ == "__main__":
     cargarDiccionario(diccionario_imagenes)
+	
     pantallaInicio()
     main()		
