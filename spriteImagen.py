@@ -21,7 +21,6 @@ class Imagen(pygame.sprite.Sprite):
 	def set_rect(self,ancho,alto):
 		self.rect.width=ancho
 		self.rect.height=alto
-
 	def get_rect(self):
 		return self.rect
 		
