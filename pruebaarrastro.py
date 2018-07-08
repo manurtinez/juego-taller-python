@@ -6,6 +6,7 @@ from pygame.locals import *
 from spriteImagen import *
 from itertools import cycle
 import random
+import json
  
 WHITE = (255, 255, 255)
 BLACK = (  0,   0,   0)
@@ -19,7 +20,7 @@ BRIGHTYELLOW = (255, 255,   0)
 YELLOW = (155, 155,   0)
 DARKGRAY = ( 40,  40,  40)
  
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
+colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN,BLUE]
 
 pygame.init()
 ancho_ventana = 1320
@@ -51,8 +52,8 @@ botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (AN
 botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                            ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 1.3),
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON+90, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
@@ -62,22 +63,24 @@ pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
  
 def drawScore(score):
-	"""dibuja el puntaje correspondiente"""
-	scoreSurf = BASICFONT.render('puntos: %s' % (score), True, WHITE)
-	scoreRect = scoreSurf.get_rect()
-	scoreRect.topleft = (ancho_ventana - 120, 10)
-	screen.blit(scoreSurf, scoreRect)
+    scoreSurf = BASICFONT.render('puntos: %s' % (score), True, WHITE)
+    scoreRect = scoreSurf.get_rect()
+    scoreRect.topleft = (ancho_ventana - 120, 10)
+    screen.blit(scoreSurf, scoreRect)
  
  
-# Definimos algunas variables que usaremos en nuestro código
+
  
  
  
-def main(nombre_usuario):
-	"""loop principal"""
+def main(nombre_usuario):	
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
+	screen.fill(random.choice(colores))
+	drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+	pygame.display.flip()
+	time.sleep(1)
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 		lista_sprites= inicializarImagenes(dicc_actual)
@@ -94,7 +97,7 @@ def main(nombre_usuario):
 			pygame.display.flip()
 		time.sleep(1)
 																						
-		aux+=1	
+		aux+=1		
 	screen.fill(random.choice(colores))	
 	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
 	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)	
@@ -103,7 +106,6 @@ def main(nombre_usuario):
 
 
 def correrJuego(color,letra,args,puntos):
-	"""loop del juego al clickear en iniciar"""
 	puntosAnt=0
 	correcto=0
 	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
@@ -129,7 +131,7 @@ def correrJuego(color,letra,args,puntos):
 				for objeto in args:
 					if objeto.toca(x,y):
 						puntosAnt = puntos
-						tupla=evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,args)
+						tupla=evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
 						correcto=tupla[1]
 						if(puntosAnt>puntos):
@@ -142,7 +144,7 @@ def correrJuego(color,letra,args,puntos):
 				screen.blit(objeto.image, objeto.rect)
 		drawScore(puntos)
 		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		drawMensaje(msj, ancho_ventana-550, alto_ventana-650)
+		drawMensaje(msj, ancho_ventana-500, alto_ventana-650)
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
@@ -150,12 +152,10 @@ def correrJuego(color,letra,args,puntos):
 
 
 def drawMensaje(msj, x, y):
-	"""metodo para dibujar mensajes en pantalla"""
 	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
 	screen.blit(msjSurf, (x, y))
 
-def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args):
-	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
+def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -267,7 +267,6 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	return (dicc)
 
 def inicializarImagenes(dicc):
-	"""retorna una lista con las imagenes del directorio"""
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
@@ -291,12 +290,10 @@ def inicializarImagenes(dicc):
 	return lista_sprites                                         
 											
 def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
-	"""metodo para ingresar un nombre de usuario al iniciar la partida"""
 	FUENTE_NOMBRE_2 = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 	cadena = ""
 	fin = False
 	valores_permitidos= [i for i in range(97, 123)] + [i for i in range(48,58)]
-    
 	EVENT_PARPADEO = pygame.USEREVENT + 0
 	pygame.time.set_timer(EVENT_PARPADEO, 800)
 	ciclo_parpadeo = cycle(["_", " "])
@@ -314,10 +311,10 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 				siguiente_parpadeo = next(ciclo_parpadeo)
 			
 			elif event.type == KEYUP and event.key in valores_permitidos and len(cadena) < largo_max:     #si el caracter cumple
-				
+				# caps entry?
 				if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:        #si se ingresa en mayusculas
 					cadena += chr(event.key).upper()
-				
+				# lowercase entry
 				else:														#si es minuscula
 					cadena += chr(event.key)
 			elif event.type == KEYUP:											
