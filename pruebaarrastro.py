@@ -74,6 +74,7 @@ def drawScore(score):
  
  
 def main(nombre_usuario):	
+	"""loop principal"""
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
@@ -106,6 +107,7 @@ def main(nombre_usuario):
 
 
 def correrJuego(color,letra,args,puntos):
+	"""loop del juego al clickear en iniciar"""
 	puntosAnt=0
 	correcto=0
 	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
@@ -152,10 +154,12 @@ def correrJuego(color,letra,args,puntos):
 
 
 def drawMensaje(msj, x, y):
+	"""dibuja el puntaje correspondiente"""
 	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
 	screen.blit(msjSurf, (x, y))
 
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -267,6 +271,7 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	return (dicc)
 
 def inicializarImagenes(dicc):
+	"""retorna una lista con las imagenes del directorio"""
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
@@ -290,6 +295,7 @@ def inicializarImagenes(dicc):
 	return lista_sprites                                         
 											
 def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
+	"""metodo para ingresar un nombre de usuario al iniciar la partida"""
 	FUENTE_NOMBRE_2 = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 	cadena = ""
 	fin = False
