@@ -70,23 +70,22 @@ def drawScore(score):
 def main():
 	aux=0           # indice que hace referencia a la letra a usar del diccionario
 	dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
-	print(dicc_actual)
+	
+	#print(diccionario_imagenes['Letras'][0])
+	#char= imagen[0].upper()              
+	#ruta= DIRIMAGENES+char+"/"+imagen    
+	#imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
 	lista_sprites= inicializarImagenes(dicc_actual, LISTA_DIR_IMAGENES[aux])
-	# letra_A= Imagen((ancho_ventana-900, alto_ventana-700), "kate.png")
-	# player = Imagen((ancho_ventana/2, alto_ventana/2),"kate.png")
-	# player2 = Imagen((ancho_ventana/1.5, alto_ventana/1.5), "kate.png")
-	# player2.image=pygame.transform.rotozoom(player.image,0,.8)
-	# player.image=pygame.transform.rotozoom(player.image,0,.8)
 	pygame.mixer.music.play(-1, 0.0)
-	persona=True
 	while True:
-		correrJuego(lista_sprites[0], lista_sprites[1], lista_sprites[2])
+		tupla=tuple(lista_sprites[1:])
+		correrJuego(RED,lista_sprites[0], tupla)
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)     #hay q hacer que cuando se complete el nivel de la letra A, 
 																		#se pase al siguiente nivel con esta funcion e incrementando la variable aux
 																		#para que se seleccione la siguiente vocal
 
 
-def correrJuego(player, player2, letra_A):
+def correrJuego(color,letra,args):
 	puntos= 0
 	reproduccionMusica= True
 	drawScore(puntos)
@@ -106,37 +105,20 @@ def correrJuego(player, player2, letra_A):
 						reproduccionMusica= True
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
-				if player2.toca(x,y):
-					puntos=evaluar(player2,letra_A,event,puntos,player)	
-				elif player.toca(x,y):
-					puntos=evaluar(player,letra_A,event,puntos,player2)		
-#				if letra_A.toca (x,y):
-#					print("letra_A")
-#					if letra_A.rect.colliderect(player.rect):
-#						if player.arrastra:
-#							player.arrastra=False
-#							puntos+=3
-#					if letra_A.rect.colliderect(player2.rect):
-#						if player2.arrastra:
-#							player2.arrastra = False
-#							puntos+=3
-#				else:
-#					if player2.toca(x,y):
-#						player2.handle_event(event)
-#					elif player.toca(x,y):
-#						player.handle_event(event)
-		screen.fill(pygame.Color('gray'))
-		if player.arrastra:
-			screen.blit(player.image, player.rect)
-		if player2.arrastra:
-			screen.blit(player2.image, player2.rect)
+				for objeto in args:
+					if objeto.toca(x,y):
+						puntos=evaluar(objeto,letra,event,color,puntos,args)		
+		screen.fill(color)
+		for objeto in args:
+			if objeto.arrastra:
+				screen.blit(objeto.image, objeto.rect)
 		drawScore(puntos)
-		screen.blit(letra_A.image, letra_A.rect)
+		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
 
 
-def evaluar(objeto,objeto_destino,event,puntos,*args):
+def evaluar(objeto,objeto_destino,event,color,puntos,args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -151,7 +133,7 @@ def evaluar(objeto,objeto_destino,event,puntos,*args):
 					else:
 						pygame.mixer.music.unpause()
 						reproduccionMusica= True
-		screen.fill(pygame.Color('gray'))
+		screen.fill(color)
 		for obj in args:
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
@@ -245,20 +227,36 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	return (dicc)
 
 def inicializarImagenes(dicc, ruta):
-	global ancho_ventana
-	global alto_ventana
-	lista_sprites=[]				#lista de los sprites para poder controlar los eventos
-	letra= list(dicc.keys())[0]       # almacena en letra la letra del direc.
-	lis= dicc[letra]				#lista con el nombre de cada imagen
-	for imagen in lis:
-		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
-		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
-		imagen= Imagen((ancho_ventana, alto_ventana), ruta)
-		ancho_ventana-= 250
-		alto_ventana-= 250
+	ancho_ventana_aux=150
+	alto_ventana_aux=150
+	lista_sprites=[]				
+	letra= list(dicc.keys())[0]     
+	lis= dicc[letra].copy()
+	lista_random=[]	
+	for num in range(len (lis)):
+		imagen_random=random.choice(lis)
+		lista_random.append(imagen_random)
+		lis.remove(imagen_random)
+		
+		print(num)
+	print(lista_random)		
+	for imagen in lista_random[0:3]:
+		char= imagen[0].upper()              
+		ruta= DIRIMAGENES+char+"/"+imagen    
+		imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
+		ancho_ventana_aux+= 250
 		lista_sprites.append(imagen)
-	return lista_sprites                     # tambien se podria hacer q devuelva un diccionario, para que sea mas facil distinguir las
-											 # imagenes en los eventos
+	ancho_ventana_aux=100
+	alto_ventana_aux=500
+	for imagen in lista_random[3:5]:
+		char= imagen[0].upper()
+		print(char)              
+		ruta= DIRIMAGENES+char+"/"+imagen    
+		imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
+		ancho_ventana_aux+= 250
+		lista_sprites.append(imagen)
+	return lista_sprites                   
+											
 	
 	
 if __name__ == "__main__":

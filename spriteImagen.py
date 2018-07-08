@@ -3,7 +3,6 @@
 import pygame
 import os
 from pygame.locals import *
-
 class Imagen(pygame.sprite.Sprite):
 	def __init__(self, position,imagen, path= os.getcwd()):
 		pygame.sprite.Sprite.__init__(self)
@@ -35,8 +34,6 @@ class Imagen(pygame.sprite.Sprite):
 			y-=100	
 			self.rect.x=x
 			self.rect.y=y    
-			pantalla.blit(self.image,self.rect)
-			pygame.display.flip()
 			
 	def handle_event(self, event,pantalla):
 		if event.type == pygame.QUIT:
@@ -44,4 +41,4 @@ class Imagen(pygame.sprite.Sprite):
 		
 		if event.type == pygame.MOUSEMOTION:
 			self.update(pantalla)
-				
+		
