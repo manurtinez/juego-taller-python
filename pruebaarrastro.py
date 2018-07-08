@@ -125,8 +125,8 @@ def correrJuego(color,letra,args):
 			if objeto.arrastra:
 				screen.blit(objeto.image, objeto.rect)
 		drawScore(puntos)
-		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-50)
-		drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		drawMensaje(msj, ancho_ventana-500, alto_ventana-650)
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
@@ -157,7 +157,7 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj, args):
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
-		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-50)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
 		#drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
 		screen.blit(objeto_destino.image, objeto_destino.rect)
 		objeto.handle_event(event,screen)
