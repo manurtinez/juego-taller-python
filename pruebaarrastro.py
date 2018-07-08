@@ -21,7 +21,7 @@ DARKGRAY = ( 40,  40,  40)
 
 
 pygame.init()
-ancho_ventana = 1280
+ancho_ventana = 1320
 alto_ventana = 720
 pygame.display.set_caption("Tutorial sprites Piensa 3D")
 clock = pygame.time.Clock()
@@ -152,7 +152,7 @@ def evaluar(objeto,objeto_destino,event,color,puntos,args):
 			if objeto.nombre[0].upper() == objeto_destino.nombre:
 				puntos+= 3
 			else:
-				puntos-= 3
+				puntos-= 1
 	return puntos
 	
 def pantallaInicio():
@@ -236,15 +236,17 @@ def inicializarImagenes(dicc, ruta):
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
-	lista_sprites=[]				#lista de los sprites para poder controlar los eventos
-	letra= list(dicc.keys())[0]       # almacena en letra la letra del direc.
+	lista_sprites=[]	#lista de los sprites para poder controlar los eventos
+	letra= list(dicc.keys())[0]     # almacena en letra la letra del direc.
 	lis= dicc[letra]				
-	copy = lis[1:]						# mezclo la lista para que las imagenes incorrctas no vayan siempre al final de la pantalla
+	copy = lis[:]					# mezclo la lista para que las imagenes incorrctas no vayan siempre al final de la pantalla
 	random.shuffle(copy)		
-	lis[1:] = copy		                  	#lista con el nombre de cada imagen
-	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+alto_ventana/1.6), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
+	lis = copy[:]	
+	print(lis)	                  	#lista con el nombre de cada imagen
+	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+30), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
 	lista_sprites.append(imagen)
-	imagen.set_rect(50, 50)        # mod. rectangulo de letra
+	imagen.set_rect(1, 1)        # mod. rectangulo de letra
+	alto_aux=500
 	for imagen in lis:
 		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
 		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
@@ -252,7 +254,6 @@ def inicializarImagenes(dicc, ruta):
 		resta_ancho-= 280 
 		lista_sprites.append(imagen)
 	
-	print (lista_sprites)
 	return lista_sprites                                         
 											
 	
