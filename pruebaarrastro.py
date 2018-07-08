@@ -18,7 +18,7 @@ BRIGHTYELLOW = (255, 255,   0)
 YELLOW = (155, 155,   0)
 DARKGRAY = ( 40,  40,  40)
  
-
+colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
 
 pygame.init()
 ancho_ventana = 1320
@@ -69,34 +69,41 @@ def drawScore(score):
  
  
 def main():
-	aux=0           # indice que hace referencia a la letra a usar del diccionario
-	dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
-	
-	#print(diccionario_imagenes['Letras'][0])
-	#char= imagen[0].upper()              
-	#ruta= DIRIMAGENES+char+"/"+imagen    
-	#imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
-	lista_sprites= inicializarImagenes(dicc_actual, LISTA_DIR_IMAGENES[aux])
+	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
-	while True:
+	aux=0 # indice que hace referencia a la letra a usar del diccionario
+	while True and aux!=5:           
+		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
+		lista_sprites= inicializarImagenes(dicc_actual)
 		copy = lista_sprites[1:]
 		random.shuffle(copy)
 		lista_sprites[1:] = copy
 		tupla=tuple(lista_sprites[1:])
-		correrJuego(RED,lista_sprites[0], tupla)
-		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)     #hay q hacer que cuando se complete el nivel de la letra A, 
-																		#se pase al siguiente nivel con esta funcion e incrementando la variable aux
-																		#para que se seleccione la siguiente vocal
+		puntos=correrJuego(random.choice(colores),lista_sprites[0], tupla , puntos)
+		time.sleep(0.5)
+		screen.fill(random.choice(colores))
+		pygame.display.flip()
+		if aux!=4:
+			drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/2)
+			pygame.display.flip()
+		time.sleep(1)
+																						
+		aux+=1	
+	screen.fill(random.choice(colores))
+	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
+	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)															
+	pygame.display.flip()
+	time.sleep(1.5)																		
 
 
-def correrJuego(color,letra,args):
-	puntos= 0
-	puntosAnt = 0
+def correrJuego(color,letra,args,puntos):
+	puntosAnt=0
+	correcto=0
 	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
 	msj = ""
 	reproduccionMusica= True
 	drawScore(puntos)
-	while True:
+	while True and correcto!=3:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				terminate()
@@ -115,7 +122,9 @@ def correrJuego(color,letra,args):
 				for objeto in args:
 					if objeto.toca(x,y):
 						puntosAnt = puntos
-						puntos=evaluar(objeto,letra,event,color,puntos,consigna,msj,args)
+						tupla=evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,args)
+						puntos=tupla[0]
+						correcto=tupla[1]
 						if(puntosAnt>puntos):
 							msj = 'incorrecto!! era {}'.format(os.path.splitext(objeto.nombre)[0])
 						elif(puntosAnt<puntos):
@@ -130,13 +139,14 @@ def correrJuego(color,letra,args):
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
+	return puntos
 
 
 def drawMensaje(msj, x, y):
 	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
 	screen.blit(msjSurf, (x, y))
 
-def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj, args):
+def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -168,9 +178,10 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj, args):
 			objeto.arrastra=False
 			if objeto.nombre[0].upper() == objeto_destino.nombre:
 				puntos+= 3
+				correcto=correcto+1
 			else:
 				puntos-= 1
-	return puntos
+	return puntos,correcto
 	
 def pantallaInicio():
     """
@@ -249,7 +260,7 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	print (dicc)
 	return (dicc)
 
-def inicializarImagenes(dicc, ruta):
+def inicializarImagenes(dicc):
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
