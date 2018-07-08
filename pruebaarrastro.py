@@ -32,6 +32,7 @@ ALTOBOTON=50
 ANCHOCENTROVENTANA= ancho_ventana / 2
 ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
+FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 
 DIRIMAGENES= "./imagenes/"
@@ -90,6 +91,9 @@ def main():
 
 def correrJuego(color,letra,args):
 	puntos= 0
+	puntosAnt = 0
+	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
+	msj = ""
 	reproduccionMusica= True
 	drawScore(puntos)
 	while True:
@@ -110,18 +114,30 @@ def correrJuego(color,letra,args):
 			if pygame.mouse.get_pressed()[0]:
 				for objeto in args:
 					if objeto.toca(x,y):
-						puntos=evaluar(objeto,letra,event,color,puntos,args)		
+						puntosAnt = puntos
+						puntos=evaluar(objeto,letra,event,color,puntos,consigna,msj,args)
+						if(puntosAnt>puntos):
+							msj = 'incorrecto!! era {}'.format(os.path.splitext(objeto.nombre)[0])
+						elif(puntosAnt<puntos):
+							msj = 'correcto!! era {}'.format(os.path.splitext(objeto.nombre)[0])		
 		screen.fill(color)
 		for objeto in args:
 			if objeto.arrastra:
 				screen.blit(objeto.image, objeto.rect)
 		drawScore(puntos)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-50)
+		drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
 
 
-def evaluar(objeto,objeto_destino,event,color,puntos,args):
+def drawMensaje(msj, x, y):
+	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
+	screen.blit(msjSurf, (x, y))
+	pygame.display.update()
+
+def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj, args):
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -141,6 +157,8 @@ def evaluar(objeto,objeto_destino,event,color,puntos,args):
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-50)
+		#drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
 		screen.blit(objeto_destino.image, objeto_destino.rect)
 		objeto.handle_event(event,screen)
 		screen.blit(objeto.image,objeto.rect)
