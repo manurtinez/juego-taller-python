@@ -259,7 +259,6 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 				lista.append(img)
 			dicc[letra]= lista
 			lista=[]
-	print (dicc)
 	return (dicc)
 
 def inicializarImagenes(dicc):
@@ -272,7 +271,6 @@ def inicializarImagenes(dicc):
 	copy = lis[:]					# mezclo la lista para que las imagenes incorrctas no vayan siempre al final de la pantalla
 	random.shuffle(copy)		
 	lis = copy[:]	
-	print(lis)	                  	#lista con el nombre de cada imagen
 	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+30), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
 	lista_sprites.append(imagen)
 	imagen.set_rect(1, 1)        # mod. rectangulo de letra
