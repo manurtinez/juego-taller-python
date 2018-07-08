@@ -51,7 +51,9 @@ botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (AN
 botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                            ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-
+botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
 pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
@@ -72,7 +74,7 @@ def drawScore(score):
  
 def main(nombre_usuario):
 	puntos= 0
-	pygame.mixer.music.unpause()
+	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
@@ -86,17 +88,16 @@ def main(nombre_usuario):
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
 		if aux!=4:
-			drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/2)
+			drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
 		time.sleep(1)
 																						
 		aux+=1	
-	screen.fill(random.choice(colores))
-	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
-	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)															
-	pygame.display.flip()
-	time.sleep(1.5)
-	pantallaInicio()																	
+	screen.fill(random.choice(colores))	
+	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
+	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)	
+	pantallaInicio(botonJuegoNuevo)													
+	pygame.display.flip()																	
 
 
 def correrJuego(color,letra,args,puntos):
@@ -170,7 +171,6 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
 		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		#drawMensaje(msj, ancho_ventana-500, alto_ventana-50)
 		screen.blit(objeto_destino.image, objeto_destino.rect)
 		objeto.handle_event(event,screen)
 		screen.blit(objeto.image,objeto.rect)
@@ -186,11 +186,10 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto, args
 				puntos-= 1
 	return puntos,correcto
 	
-def pantallaInicio():
+def pantallaInicio(boton):
     """
     Carga la pantalla inicial del juego
     """
-    screen.fill(pygame.Color('dark green'))
     while True:
 
         events = pygame.event.get()
@@ -201,12 +200,11 @@ def pantallaInicio():
                 if event.key == K_ESCAPE:
                     terminate()
 
-        botonInicio.mostrarBoton()
+        boton.mostrarBoton()
         botonSalir.mostrarBoton()
 
-        if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-        	nombre_usuario= ingreso_usuario(13)
-        	main(nombre_usuario)
+        if boton.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            return
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
@@ -319,7 +317,6 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 				# lowercase entry
 				else:														#si es minuscula
 					cadena += chr(event.key)
-			# otherwise, only the following are valid inputs
 			elif event.type == KEYUP:											
 				if event.key == K_BACKSPACE:						
 					cadena = cadena[:-1]
@@ -327,13 +324,11 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 					cadena += " "
 				elif event.key == K_RETURN:
 					fin = True
-		# only draw underscore if input is not at max character length
 		if len(cadena) < largo_max:
 			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
 		else:
 			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
 		pygame.display.update()
-	#print (cadena)
 	return cadena
 
 
@@ -348,5 +343,9 @@ if __name__ == "__main__":
 	cargarDiccionario(diccionario_imagenes)
 	pygame.mixer.music.play(-1, 0.0)
 	pygame.mixer.music.pause()
-	#main(nombre_usuario)		
-	pantallaInicio()
+	screen.fill(random.choice(colores))		
+	while True:	
+		pantallaInicio(botonInicio)
+		nombre_usuario= ingreso_usuario(13)
+		main(nombre_usuario)
+		
