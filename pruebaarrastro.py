@@ -21,8 +21,8 @@ DARKGRAY = ( 40,  40,  40)
 
 
 pygame.init()
-ancho_ventana = 900
-alto_ventana = 900
+ancho_ventana = 1280
+alto_ventana = 720
 pygame.display.set_caption("Tutorial sprites Piensa 3D")
 clock = pygame.time.Clock()
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
@@ -78,6 +78,9 @@ def main():
 	lista_sprites= inicializarImagenes(dicc_actual, LISTA_DIR_IMAGENES[aux])
 	pygame.mixer.music.play(-1, 0.0)
 	while True:
+		copy = lista_sprites[1:]
+		random.shuffle(copy)
+		lista_sprites[1:] = copy
 		tupla=tuple(lista_sprites[1:])
 		correrJuego(RED,lista_sprites[0], tupla)
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)     #hay q hacer que cuando se complete el nivel de la letra A, 
@@ -146,7 +149,10 @@ def evaluar(objeto,objeto_destino,event,color,puntos,args):
 	if objeto_destino.rect.colliderect(objeto.rect):
 		if objeto.arrastra:
 			objeto.arrastra=False
-			puntos=puntos+3
+			if objeto.nombre[0].upper() == objeto_destino.nombre:
+				puntos+= 3
+			else:
+				puntos-= 3
 	return puntos
 	
 def pantallaInicio():
@@ -227,35 +233,27 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	return (dicc)
 
 def inicializarImagenes(dicc, ruta):
-	ancho_ventana_aux=150
-	alto_ventana_aux=150
-	lista_sprites=[]				
-	letra= list(dicc.keys())[0]     
-	lis= dicc[letra].copy()
-	lista_random=[]	
-	for num in range(len (lis)):
-		imagen_random=random.choice(lis)
-		lista_random.append(imagen_random)
-		lis.remove(imagen_random)
-		
-		print(num)
-	print(lista_random)		
-	for imagen in lista_random[0:3]:
-		char= imagen[0].upper()              
-		ruta= DIRIMAGENES+char+"/"+imagen    
-		imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
-		ancho_ventana_aux+= 250
+	ancho_aux= 0
+	alto_aux= 50
+	resta_ancho= ancho_ventana
+	lista_sprites=[]				#lista de los sprites para poder controlar los eventos
+	letra= list(dicc.keys())[0]       # almacena en letra la letra del direc.
+	lis= dicc[letra]				
+	copy = lis[1:]						# mezclo la lista para que las imagenes incorrctas no vayan siempre al final de la pantalla
+	random.shuffle(copy)		
+	lis[1:] = copy		                  	#lista con el nombre de cada imagen
+	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+alto_ventana/1.6), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
+	lista_sprites.append(imagen)
+	imagen.set_rect(50, 50)        # mod. rectangulo de letra
+	for imagen in lis:
+		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
+		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
+		imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux), ruta, imagen)
+		resta_ancho-= 280 
 		lista_sprites.append(imagen)
-	ancho_ventana_aux=100
-	alto_ventana_aux=500
-	for imagen in lista_random[3:5]:
-		char= imagen[0].upper()
-		print(char)              
-		ruta= DIRIMAGENES+char+"/"+imagen    
-		imagen= Imagen((ancho_ventana_aux, alto_ventana_aux), ruta)
-		ancho_ventana_aux+= 250
-		lista_sprites.append(imagen)
-	return lista_sprites                   
+	
+	print (lista_sprites)
+	return lista_sprites                                         
 											
 	
 	

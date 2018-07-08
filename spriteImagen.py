@@ -4,12 +4,12 @@ import pygame
 import os
 from pygame.locals import *
 class Imagen(pygame.sprite.Sprite):
-	def __init__(self, position,imagen, path= os.getcwd()):
+	def __init__(self, position,imagen, nombre, path= os.getcwd()):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(imagen)
 		self.rect = self.image.get_rect()
 		self.rect.topleft=position
-		self.nombre= imagen
+		self.nombre= nombre
 		self.arrastra=True
 	
 	def toca2(self,rectangulo):
