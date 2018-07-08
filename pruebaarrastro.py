@@ -20,7 +20,7 @@ BRIGHTYELLOW = (255, 255,   0)
 YELLOW = (155, 155,   0)
 DARKGRAY = ( 40,  40,  40)
  
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN,BLUE]
+colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
 
 pygame.init()
 ancho_ventana = 1320
@@ -69,8 +69,6 @@ def drawScore(score):
     screen.blit(scoreSurf, scoreRect)
  
  
-<<<<<<< HEAD
-# Definimos algunas variables que usaremos en nuestro código
 def modificoArchivoLog(datosJson):
 	ok= False
 	aux= False             #para saber si el puntaje actual es menor
@@ -93,17 +91,11 @@ def modificoArchivoLog(datosJson):
 	else:
 		json.dump(datos_iguales, archivo)
 	archivo.close()
-
-
-def main(nombre_usuario):
-=======
-
  
  
  
 def main(nombre_usuario):	
 	"""loop principal"""
->>>>>>> e47a14772451bee5dec981a7a9ad949e2ecc3b80
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
@@ -127,29 +119,19 @@ def main(nombre_usuario):
 			pygame.display.flip()
 		time.sleep(1)
 																						
-<<<<<<< HEAD
-		aux+=1	
-	screen.fill(random.choice(colores))
-	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
-	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)	
+		aux+=1		
+	screen.fill(random.choice(colores))	
+	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
+	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)
 	datosJson =[
 					{
 						"nombre": nombre_usuario,
 						"puntaje_maximo": puntos
 					}
 				]	
-	modificoArchivoLog(datosJson) 														
-	pygame.display.flip()
-	time.sleep(1.5)	
-	pantallaInicio()																	
-=======
-		aux+=1		
-	screen.fill(random.choice(colores))	
-	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
-	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)	
+	modificoArchivoLog(datosJson)	
 	pantallaInicio(botonJuegoNuevo)													
 	pygame.display.flip()																	
->>>>>>> e47a14772451bee5dec981a7a9ad949e2ecc3b80
 
 
 def correrJuego(color,letra,args,puntos):
@@ -400,4 +382,3 @@ if __name__ == "__main__":
 		pantallaInicio(botonInicio)
 		nombre_usuario= ingreso_usuario(13)
 		main(nombre_usuario)
-		
