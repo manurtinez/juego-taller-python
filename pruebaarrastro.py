@@ -254,8 +254,8 @@ def inicializarImagenes(dicc, ruta):
 		if isinstance(imagen, str):
 			print ("hola")
 			imagen= Imagen((ancho_ventana, alto_ventana), ruta+imagen)
-			ancho_ventana-= 250
-			alto_ventana-= 250
+			ancho_ventana-= 500
+			alto_ventana-= 500
 			lista_sprites.append(imagen)
 		else:
 			print (imagen[0])
