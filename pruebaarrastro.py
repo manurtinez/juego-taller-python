@@ -4,6 +4,7 @@ import sys
 import pygame
 from pygame.locals import *
 from spriteImagen import *
+from itertools import cycle
 import random
  
 WHITE = (255, 255, 255)
@@ -26,6 +27,7 @@ alto_ventana = 720
 pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
+BASICFONT_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
 WHITE     = (255, 255, 255)
 ANCHOBOTON=150
 ALTOBOTON=50
@@ -68,7 +70,7 @@ def drawScore(score):
  
  
  
-def main():
+def main(nombre_usuario):
 	puntos= 0
 	pygame.mixer.music.unpause()
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
@@ -203,7 +205,7 @@ def pantallaInicio():
         botonSalir.mostrarBoton()
 
         if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-            main()
+            main(nombre_usuario)
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
@@ -285,10 +287,66 @@ def inicializarImagenes(dicc):
 	
 	return lista_sprites                                         
 											
-	
+def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
+	FUENTE_NOMBRE_2 = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+	cadena = ""
+	fin = False
+    # create list of allowed characters using ascii values
+    # numbers 1-9, letters a-z
+	valores_permitidos= [i for i in range(97, 123)] + [i for i in range(48,58)]
+    # create blinking underscore
+	EVENT_PARPADEO = pygame.USEREVENT + 0
+	pygame.time.set_timer(EVENT_PARPADEO, 800)
+	ciclo_parpadeo = cycle(["_", " "])
+	siguiente_parpadeo = next(ciclo_parpadeo)
+	while not fin:
+		screen.fill(pygame.Color('dark green'))
+		pygame.draw.rect(screen, BLUE, (ancho_ventana/2-150, alto_ventana/2-50, 300, 80)) #coordenadas de rectangulo azul
+		imprimo_texto(BASICFONT_NOMBRE, ancho_ventana/2-150, alto_ventana/2-100, "TU NOMBRE: ")
+
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == EVENT_PARPADEO:					#controla parpadeos
+				siguiente_parpadeo = next(ciclo_parpadeo)
+			
+			elif event.type == KEYUP and event.key in valores_permitidos and len(cadena) < largo_max:     #si el caracter cumple
+				# caps entry?
+				if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:        #si se ingresa en mayusculas
+					cadena += chr(event.key).upper()
+				# lowercase entry
+				else:														#si es minuscula
+					cadena += chr(event.key)
+			# otherwise, only the following are valid inputs
+			elif event.type == KEYUP:											
+				if event.key == K_BACKSPACE:						
+					cadena = cadena[:-1]
+				elif event.key == K_SPACE:
+					cadena += " "
+				elif event.key == K_RETURN:
+					fin = True
+		# only draw underscore if input is not at max character length
+		if len(cadena) < largo_max:
+			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
+		else:
+			imprimo_texto(FUENTE_NOMBRE_2, ancho_ventana/2-145, alto_ventana/2-25, cadena + siguiente_parpadeo)
+		pygame.display.update()
+	#print (cadena)
+	return cadena
+
+
+def imprimo_texto(fuente, x, y, texto, color = (255,255,255)):
+    texto_imagen = fuente.render(texto, True, color)
+    screen.blit(texto_imagen, (x,y))
+
+
+
 	
 if __name__ == "__main__":
-    cargarDiccionario(diccionario_imagenes)
-    pygame.mixer.music.play(-1, 0.0)
-    pygame.mixer.music.pause()
-    pantallaInicio()
+	cargarDiccionario(diccionario_imagenes)
+	pygame.mixer.music.play(-1, 0.0)
+	pygame.mixer.music.pause()
+	nombre_usuario= ingreso_usuario(13)
+	main(nombre_usuario)		
+	pantallaInicio()
