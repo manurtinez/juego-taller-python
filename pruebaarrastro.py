@@ -23,7 +23,7 @@ colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,RED,GREEN,BLUE]
 pygame.init()
 ancho_ventana = 1320
 alto_ventana = 720
-pygame.display.set_caption("Tutorial sprites Piensa 3D")
+pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 WHITE     = (255, 255, 255)
@@ -70,7 +70,7 @@ def drawScore(score):
  
 def main():
 	puntos= 0
-	pygame.mixer.music.play(-1, 0.0)
+	pygame.mixer.music.unpause()
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
@@ -93,7 +93,8 @@ def main():
 	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
 	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)															
 	pygame.display.flip()
-	time.sleep(1.5)																		
+	time.sleep(1.5)	
+	pantallaInicio()																	
 
 
 def correrJuego(color,letra,args,puntos):
@@ -202,7 +203,7 @@ def pantallaInicio():
         botonSalir.mostrarBoton()
 
         if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-            return
+            main()
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
@@ -288,6 +289,6 @@ def inicializarImagenes(dicc):
 	
 if __name__ == "__main__":
     cargarDiccionario(diccionario_imagenes)
-	
+    pygame.mixer.music.play(-1, 0.0)
+    pygame.mixer.music.pause()
     pantallaInicio()
-    main()		
