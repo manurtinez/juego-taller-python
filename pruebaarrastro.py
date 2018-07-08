@@ -95,7 +95,7 @@ def main(nombre_usuario):
 	drawMensaje("FIN DEL JUEGO",ancho_ventana/2.6,alto_ventana/2)	
 	drawMensaje("Tu puntaje fue: "+ str(puntos),ancho_ventana/2.8,alto_ventana/1.7)															
 	pygame.display.flip()
-	time.sleep(1.5)	
+	time.sleep(1.5)
 	pantallaInicio()																	
 
 
@@ -205,7 +205,8 @@ def pantallaInicio():
         botonSalir.mostrarBoton()
 
         if botonInicio.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-            main(nombre_usuario)
+        	nombre_usuario= ingreso_usuario(13)
+        	main(nombre_usuario)
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
@@ -347,6 +348,5 @@ if __name__ == "__main__":
 	cargarDiccionario(diccionario_imagenes)
 	pygame.mixer.music.play(-1, 0.0)
 	pygame.mixer.music.pause()
-	nombre_usuario= ingreso_usuario(13)
-	main(nombre_usuario)		
+	#main(nombre_usuario)		
 	pantallaInicio()
