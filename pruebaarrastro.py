@@ -247,26 +247,26 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 def inicializarImagenes(dicc, ruta):
 	global ancho_ventana
 	global alto_ventana
-	lista_sprites=[]
-	letra= list(dicc.keys())[0]
-	lis= dicc[letra]
+	lista_sprites=[]				#lista de los sprites para poder controlar los eventos
+	letra= list(dicc.keys())[0]          # almacena el letra la letra del direc.
+	lis= dicc[letra]				#lista con el nombre de cada imagen
 	for imagen in lis:
-		if isinstance(imagen, str):
-			print ("hola")
-			imagen= Imagen((ancho_ventana, alto_ventana), ruta+imagen)
-			ancho_ventana-= 500
+		if isinstance(imagen, str):     #si (es un string): (pq la lista tiene otras listas adentro)
+			imagen= Imagen((ancho_ventana, alto_ventana), ruta+imagen)   
+			ancho_ventana-= 500				#mod. coordenadas para prox imagen
 			alto_ventana-= 500
-			lista_sprites.append(imagen)
-		else:
-			print (imagen[0])
-			char= imagen[0][0].upper()
-			ruta2= DIRIMAGENES+char+"/"+imagen[0]
+			lista_sprites.append(imagen)    #agrego sprite a la lista
+		else:                                # si (es una cosa que NO empieza con "letra"):
+			#print (imagen[0])
+			char= imagen[0][0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
+			ruta2= DIRIMAGENES+char+"/"+imagen[0]        #modifico directorio pq sino no encuentra la imagen, 
 			imagen= Imagen((ancho_ventana, alto_ventana), ruta2)
 			ancho_ventana-= 250
 			alto_ventana-= 250
 			lista_sprites.append(imagen)
 	#print (lista_sprites)
-	return lista_sprites
+	return lista_sprites                     # tambien se podria hacer q devuelva un diccionario, para que sea mas facil distinguir las
+											 # imagenes en los eventos
 	
 	
 if __name__ == "__main__":
