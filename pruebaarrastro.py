@@ -52,15 +52,24 @@ botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (AN
 botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                            ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 110 , ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
 pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
  
-
+def pantallaLeaderboard():
+	puntaje_maximo= -1
+	nom_punt_max= ""
+	archivo= open("logs.json", "r")
+	datos= json.load(archivo)
+	for partida in datos:
+		if partida["puntaje_maximo"] > puntaje_maximo:
+			puntaje_maximo= partida["puntaje_maximo"]
+			nom_punt_max= partida["nombre"]
+	drawMensaje("puntaje mas alto "+str(puntaje_maximo)+", lo hizo "+'"'+nom_punt_max+'"', 250, 50)
  
 def drawScore(score):
     scoreSurf = BASICFONT.render('puntos: %s' % (score), True, WHITE)
@@ -123,6 +132,7 @@ def main(nombre_usuario):
 	screen.fill(random.choice(colores))	
 	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
 	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)
+	pantallaLeaderboard()
 	datosJson =[
 					{
 						"nombre": nombre_usuario,
