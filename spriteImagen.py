@@ -8,7 +8,7 @@ class Imagen(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load(imagen)
 		self.rect = self.image.get_rect()
-		self.rect_aux=self.rect
+		self.rect_aux=position
 		self.rect.topleft=position
 		self.nombre= nombre
 		self.arrastra=True

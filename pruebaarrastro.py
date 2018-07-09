@@ -225,12 +225,13 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,repro
 		clock.tick(60)
 	if objeto_destino.rect.colliderect(objeto.rect):
 		if objeto.arrastra:
-			objeto.arrastra=False
 			if objeto.nombre[0].upper() == objeto_destino.nombre:
+				objeto.arrastra=False
 				puntos+= 3
 				correcto=correcto+1
 			else:
 				puntos-= 1
+				objeto.rect.topleft=objeto.rect_aux
 	return puntos,correcto
 	
 def pantallaInicio(boton):
