@@ -177,7 +177,7 @@ def correrJuego(color,letra,args,puntos):
 						if(puntosAnt>puntos):
 							msj = 'incorrecto!! era {}'.format(os.path.splitext(objeto.nombre)[0])
 						elif(puntosAnt<puntos):
-							msj = 'correcto!! era {}'.format(os.path.splitext(objeto.nombre)[0])		
+							msj = 'correcto!! es {}'.format(os.path.splitext(objeto.nombre)[0])		
 		screen.fill(color)
 		for objeto in args:
 			if objeto.arrastra:
@@ -321,7 +321,7 @@ def inicializarImagenes(dicc):
 	lis = copy[:]	
 	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+30), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
 	lista_sprites.append(imagen)
-	imagen.set_rect(1, 1)        # mod. rectangulo de letra
+	imagen.set_rect(200, 1)        # mod. rectangulo de letra
 	alto_aux=500
 	for imagen in lis:
 		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar

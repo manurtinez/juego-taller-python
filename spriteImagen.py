@@ -32,7 +32,15 @@ class Imagen(pygame.sprite.Sprite):
 			x-=100
 			y-=100	
 			self.rect.x=x
-			self.rect.y=y    
+			self.rect.y=y
+		if self.rect.left < 0:
+			self.rect.left = 0
+		elif self.rect.right > 1320:
+			self.rect.right = 1320
+		if self.rect.top <= 0:
+			self.rect.top = 0
+		elif self.rect.bottom >= 720:
+			self.rect.bottom = 720  
 			
 	def handle_event(self, event,pantalla):
 		if event.type == pygame.QUIT:
