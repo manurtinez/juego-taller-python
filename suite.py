@@ -8,60 +8,61 @@ from itertools import cycle
 import random
 import json
 
-WHITE = (255, 255, 255)
-BLACK = (  0,   0,   0)
-BRIGHTRED = (255,   0,   0)
-RED = (155,   0,   0)
-BRIGHTGREEN = (  0, 255,   0)
-GREEN = (  0, 155,   0)
-BRIGHTBLUE = (  0,   0, 255)
-BLUE = (  0,   0, 155)
-BRIGHTYELLOW = (255, 255,   0)
-YELLOW = (155, 155,   0)
-DARKGRAY = ( 40,  40,  40)
+ROJOCLARO = (255,   0,   0)
+ROJO = (155,   0,   0)
+VERDECLARO = (  0, 255,   0)
+VERDE = (  0, 155,   0)
+AZULCLARO = (  0,   0, 255)
+AZUL = (  0,   0, 155)
+BLANCO = (255, 255, 255)
+NEGRO= (0, 0, 0)
 
 
-
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN]
+colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
 ancho_ventana = 1320
 alto_ventana = 720
 pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()
-BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
-BASICFONT_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
-WHITE     = (255, 255, 255)
+FUENTE_BASICA = pygame.font.Font('freesansbold.ttf', 18)
+FUENTE_BASICA_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
+
+
+
 ANCHOBOTON=150
 ALTOBOTON=50
 ANCHOCENTROVENTANA= ancho_ventana / 2
 ALTOCENTROVENTANA= alto_ventana / 2
+
+
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 DIRIMAGENES= "./imagenes/"
 
-botonComeVocales = Boton.boton(RED, BLUE, screen, "Come Vocales", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 50, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+botonComeVocales = Boton.boton(ROJO, AZUL, screen, "Come Vocales", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 50, ALTOBOTON, BLANCO, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
-botonEntrometido = Boton.boton(RED, BLUE, screen, "El Entrometido", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
-                            ALTOCENTROVENTANA - 100, ANCHOBOTON + 50, ALTOBOTON, WHITE, -100, ANCHOCENTROVENTANA,
+botonEntrometido = Boton.boton(ROJO, AZUL, screen, "El Entrometido", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
+                            ALTOCENTROVENTANA - 100, ANCHOBOTON + 50, ALTOBOTON, BLANCO, -100, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
-botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
-                           ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
+botonSalir = Boton.boton(ROJO, AZUL, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
+                           ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, BLANCO, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 110 , ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
+botonJuegoNuevo = Boton.boton(ROJO, AZUL, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 110 , ALTOBOTON, BLANCO, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
-botonCadaUnaEnSuLugar = Boton.boton(RED, BLUE, screen, "Cada uno en su lugar", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
-                            ALTOCENTROVENTANA - 170, ANCHOBOTON + 110 , ALTOBOTON, WHITE, -170, ANCHOCENTROVENTANA,
+botonCadaUnaEnSuLugar = Boton.boton(ROJO, AZUL, screen, "Cada uno en su lugar", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA - 170, ANCHOBOTON + 110 , ALTOBOTON, BLANCO, -170, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
 
 def pantallaLeaderboard(nombre):
+	"""muestra el puntaje maximo y quien lo realizo en pantalla""" 
 	puntaje_maximo= -1
 	nom_punt_max= ""
 	archivo= open(nombre, "r")
@@ -74,6 +75,7 @@ def pantallaLeaderboard(nombre):
 
 
 def modificoArchivoLog(datosJson,nombre):
+	"""actualiza o crea el archivo log del juego correspondiente"""
 	try:
 		ok= False
 		aux= False    			         #para saber si el puntaje actual es menor
@@ -102,9 +104,7 @@ def modificoArchivoLog(datosJson,nombre):
 		archivo.close()
 
 def pantallaInicio():
-    """
-    Carga la pantalla inicial del juego
-    """
+    """Carga la pantalla inicial del juego"""
     screen.fill(random.choice(colores))
     pygame.mixer.music.pause()	
     while True:
@@ -133,8 +133,6 @@ def pantallaInicio():
 
         pygame.display.update()
 
-def main():
-	pantallaInicio()
 def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	"""carga diccionario con todas las imagenes de la ruta"""
 	lista=[]
@@ -147,13 +145,15 @@ def cargarDiccionario(dicc, ruta= DIRIMAGENES):
 	return (dicc)
 
 def botonIzquierdoMouseClickeado():
-    return pygame.mouse.get_pressed()[0]
-
+	"""retorna si el boton izquierdo del mouse esta presionado"""
+	return pygame.mouse.get_pressed()[0]
+		
 def getCursorPos():
-    return pygame.mouse.get_pos()
+	"""retorna la posicion del mouse"""
+	return pygame.mouse.get_pos()
 
 def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
+	"""	evalua la condicion del tacho despues de arastrar el objeto"""
 	while not tacho.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -192,7 +192,7 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 	return puntos,correcto
 
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
+	"""evalua si la imagen colisionada corresponde con la letra o no"""
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -231,7 +231,7 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,repro
 
 def drawMensaje(msj, x, y):
 	"""dibuja el puntaje correspondiente"""
-	msjSurf = FUENTECONSIGNA.render(msj, True, BLACK)
+	msjSurf = FUENTECONSIGNA.render(msj, True, NEGRO)
 	screen.blit(msjSurf, (x, y))
 
 def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
@@ -245,9 +245,9 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 	ciclo_parpadeo = cycle(["_", " "])
 	siguiente_parpadeo = next(ciclo_parpadeo)
 	while not fin:
-		screen.fill(pygame.Color('dark green'))
-		pygame.draw.rect(screen, BLUE, (ancho_ventana/2-150, alto_ventana/2-50, 300, 80)) #coordenadas de rectangulo azul
-		imprimo_texto(BASICFONT_NOMBRE, ancho_ventana/2-150, alto_ventana/2-100, "TU NOMBRE: ")
+		screen.fill(VERDE)
+		pygame.draw.rect(screen, AZUL, (ancho_ventana/2-150, alto_ventana/2-50, 300, 80)) #coordenadas de rectangulo azul
+		imprimo_texto(FUENTE_BASICA_NOMBRE, ancho_ventana/2-150, alto_ventana/2-100, "TU NOMBRE: ")
 
 		for event in pygame.event.get():
 			if event.type == QUIT:
@@ -278,17 +278,19 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 	return cadena
 
 def imprimo_texto(fuente, x, y, texto, color = (255,255,255)):
-    texto_imagen = fuente.render(texto, True, color)
-    screen.blit(texto_imagen, (x,y))
+	"""imprime texto en pantalla dada ua poicion determinada"""
+	texto_imagen = fuente.render(texto, True, color)
+	screen.blit(texto_imagen, (x,y))
 
 def drawScore(score):
-    scoreSurf = BASICFONT.render('puntos: %s' % (score), True, WHITE)
+    """muestra y actualiza la puntuacion del juego"""
+    scoreSurf = FUENTE_BASICA.render('puntos: {}'.format(score), True, BLANCO)
     scoreRect = scoreSurf.get_rect()
     scoreRect.topleft = (ancho_ventana - 120, 10)
     screen.blit(scoreSurf, scoreRect)
 
 def inicializarImagenes(dicc):
-	"""retorna una lista con las imagenes del directorio"""
+	"""iniciaiza todos los sprites en pantalla y retorna una lista de sprites"""
 	ancho_aux= 0
 	alto_aux= 50
 	resta_ancho= ancho_ventana
@@ -329,10 +331,11 @@ def inicializarImagenesCadaUno(dicc):
 	return lista_sprites
 
 def terminate():
+	"""finaliza ejecucion y cierra el programa"""
 	pygame.quit()
 	sys.exit()
 
 if __name__ == "__main__":
 	screen.fill(random.choice(colores))
 	pygame.mixer.music.play(-1, 0.0)
-	main()
+	pantallaInicio()

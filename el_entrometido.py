@@ -8,20 +8,16 @@ from itertools import cycle
 import random
 import json
 import suite
-WHITE = (255, 255, 255)
-BLACK = (  0,   0,   0)
-BRIGHTRED = (255,   0,   0)
-RED = (155,   0,   0)
-BRIGHTGREEN = (  0, 255,   0)
-GREEN = (  0, 155,   0)
-BRIGHTBLUE = (  0,   0, 255)
-BLUE = (  0,   0, 155)
-BRIGHTYELLOW = (255, 255,   0)
-YELLOW = (155, 155,   0)
-DARKGRAY = ( 40,  40,  40)
- 
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN]
+ROJOCLARO = (255,   0,   0)
+ROJO = (155,   0,   0)
+VERDECLARO = (  0, 255,   0)
+VERDE = (  0, 155,   0)
+AZULCLARO = (  0,   0, 255)
+AZUL = (  0,   0, 155)
+BLANCO = (255, 255, 255)
+NEGRO= (0, 0, 0)
 
+colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
 ancho_ventana = 1320
@@ -45,16 +41,6 @@ LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./image
 
 diccionario_imagenes= {}
 
-botonInicio = Boton.boton(RED, BLUE, screen, "INICIAR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON, ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
-                            ALTOCENTROVENTANA, FUENTEBOTON)
-
-botonSalir = Boton.boton(RED, BLUE, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
-                           ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, WHITE, 50, ANCHOCENTROVENTANA,
-                           ALTOCENTROVENTANA, FUENTEBOTON)
-botonJuegoNuevo = Boton.boton(RED, BLUE, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 110 , ALTOBOTON, WHITE, -30, ANCHOCENTROVENTANA,
-                            ALTOCENTROVENTANA, FUENTEBOTON)
 pygame.mixer.music.set_volume(0.5)
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
@@ -159,45 +145,6 @@ def correrJuego(tacho,color,letra,args,puntos):
 	return puntos
 
 
-
-# def evaluar(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-# 	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
-# 	while not tacho.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
-# 		for event in pygame.event.get():
-# 			if event.type == pygame.QUIT:
-# 				suite.terminate()
-# 			if (event.type == KEYUP):
-# 				if event.key == K_ESCAPE:
-# 					suite.terminate()
-# 				if event.key == K_m:
-# 					if reproduccionMusica:
-# 						pygame.mixer.music.pause()
-# 						reproduccionMusica= False
-# 					else:
-# 						pygame.mixer.music.unpause()
-# 						reproduccionMusica= True
-# 		screen.fill(color)
-# 		for obj in args:
-# 			if obj.arrastra:
-# 				screen.blit(obj.image,obj.rect)
-# 		suite.drawScore(puntos)
-# 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-# 		screen.blit(tacho.image,tacho.rect)
-# 		screen.blit(objeto_destino.image, (1000,100))
-# 		objeto.handle_event(event,screen)
-# 		screen.blit(objeto.image,objeto.rect)
-# 		pygame.display.flip()
-# 		clock.tick(60)
-# 	if tacho.rect.colliderect(objeto.rect):
-# 		if objeto.arrastra:
-# 			if objeto.nombre[0].upper() != objeto_destino.nombre:
-# 				objeto.arrastra=False
-# 				puntos+= 3
-# 				correcto=correcto+1
-# 			else:
-# 				puntos-= 1
-# 				objeto.rect.topleft=objeto.rect_aux
-# 	return puntos,correcto
 
 def seleccionDeImagenes(dicc, aux):
 	"""retorna diccionario cargado con 5 imagenes aleatorias"""

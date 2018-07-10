@@ -8,19 +8,17 @@ from itertools import cycle
 import random
 import json
  
-WHITE = (255, 255, 255)
-BLACK = (  0,   0,   0)
-BRIGHTRED = (255,   0,   0)
-RED = (155,   0,   0)
-BRIGHTGREEN = (  0, 255,   0)
-GREEN = (  0, 155,   0)
-BRIGHTBLUE = (  0,   0, 255)
-BLUE = (  0,   0, 155)
-BRIGHTYELLOW = (255, 255,   0)
-YELLOW = (155, 155,   0)
-DARKGRAY = ( 40,  40,  40)
- 
-colores=[BRIGHTRED,BRIGHTGREEN,BRIGHTBLUE,GREEN]
+
+ROJOCLARO = (255,   0,   0)
+ROJO = (155,   0,   0)
+VERDECLARO = (  0, 255,   0)
+VERDE = (  0, 155,   0)
+AZULCLARO = (  0,   0, 255)
+AZUL = (  0,   0, 155)
+BLANCO = (255, 255, 255)
+NEGRO= (0, 0, 0)
+
+colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
