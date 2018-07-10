@@ -21,7 +21,7 @@ NEGRO= (0, 0, 0)
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
-ancho_ventana = 1280
+ancho_ventana = 1320
 alto_ventana = 720
 pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()

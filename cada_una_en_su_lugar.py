@@ -130,9 +130,11 @@ def correrJuego(color,letra,args,puntos):
 						puntos=tupla[0]
 						correcto=tupla[1]
 						if(puntosAnt>puntos):
-							msj = 'incorrecto!! era {}'.format(os.path.splitext(objeto.nombre)[0])
+							msj = 'incorrecto!! era {}'.format(objeto.nombre[:-4])
+							sonidoMal.play()
 						elif(puntosAnt<puntos):
-							msj = 'correcto!! es {}'.format(os.path.splitext(objeto.nombre)[0])		
+							msj = 'correcto!! es {}'.format(objeto.nombre[:-4])
+							sonidoBien.play()		
 		screen.fill(color)
 		for objeto in args:
 			if objeto.arrastra:
