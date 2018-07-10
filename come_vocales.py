@@ -60,10 +60,10 @@ sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
 pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
  
-def pantallaLeaderboard():
+def pantallaLeaderboard(nombre="logs_come_vocales.json"):
 	puntaje_maximo= -1
 	nom_punt_max= ""
-	archivo= open("logs.json", "r")
+	archivo= open(nombre, "r")
 	datos= json.load(archivo)
 	for partida in datos:
 		if partida["puntaje_maximo"] > puntaje_maximo:
@@ -78,28 +78,33 @@ def drawScore(score):
     screen.blit(scoreSurf, scoreRect)
  
  
-def modificoArchivoLog(datosJson):
-	ok= False
-	aux= False             #para saber si el puntaje actual es menor
-	archivo= open("logs.json", "r")			#el archivo json debe tener por lo menos 1 dato
-	datos_iguales= json.load(archivo)
-	datos_viejos= datos_iguales.copy()
-	for partida in datos_viejos:
-		if partida["nombre"] == datosJson[0]["nombre"]:
-			if partida["puntaje_maximo"] < datosJson[0]["puntaje_maximo"]:
-				partida["puntaje_maximo"]= datosJson[0]["puntaje_maximo"]
-				ok= True
-			else: 
-				aux= True                #significa que no supero su record
-	archivo= open("logs.json", "w")
-	if ok:
-		json.dump(datos_viejos, archivo)
-	elif not(aux):
-		datos_viejos.append(datosJson[0])
-		json.dump(datos_viejos, archivo)
-	else:
-		json.dump(datos_iguales, archivo)
-	archivo.close()
+def modificoArchivoLog(datosJson,nombre="logs_come_vocales.json"):
+	try:
+		ok= False
+		aux= False    			         #para saber si el puntaje actual es menor
+		archivo= open(nombre,"r")			#el archivo json debe tener por lo menos 1 dato
+		datos_iguales= json.load(archivo)
+		datos_viejos= datos_iguales.copy()
+		for partida in datos_viejos:
+			if partida["nombre"] == datosJson[0]["nombre"]:
+				if partida["puntaje_maximo"] < datosJson[0]["puntaje_maximo"]:
+					partida["puntaje_maximo"]= datosJson[0]["puntaje_maximo"]
+					ok= True
+				else: 
+					aux= True                #significa que no supero su record
+		archivo= open(nombre, "w")
+		if ok:
+			json.dump(datos_viejos, archivo)
+		elif not(aux):
+			datos_viejos.append(datosJson[0])
+			json.dump(datos_viejos, archivo)
+		else:
+			json.dump(datos_iguales, archivo)
+		archivo.close()
+	except FileNotFoundError:
+		archivo= open(nombre, "w")
+		json.dump(datosJson,archivo)
+		archivo.close()
  
  
  
@@ -132,7 +137,6 @@ def main(nombre_usuario):
 	screen.fill(random.choice(colores))	
 	drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
 	drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)
-	pantallaLeaderboard()
 	datosJson =[
 					{
 						"nombre": nombre_usuario,
@@ -140,6 +144,7 @@ def main(nombre_usuario):
 					}
 				]	
 	modificoArchivoLog(datosJson)	
+	pantallaLeaderboard()
 	pantallaInicio(botonJuegoNuevo)													
 	pygame.display.flip()																	
 
