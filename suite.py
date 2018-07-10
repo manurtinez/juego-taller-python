@@ -21,14 +21,16 @@ NEGRO= (0, 0, 0)
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
+
 ancho_ventana = 1320
 alto_ventana = 720
+
 pygame.display.set_caption("Conectar")
+
 clock = pygame.time.Clock()
+
 FUENTE_BASICA = pygame.font.Font('freesansbold.ttf', 18)
 FUENTE_BASICA_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
-
-
 
 ANCHOBOTON=150
 ALTOBOTON=50
@@ -98,7 +100,7 @@ def modificoArchivoLog(datosJson,nombre):
 		else:
 			json.dump(datos_iguales, archivo)
 		archivo.close()
-	except FileNotFoundError:
+	except:
 		archivo= open(nombre, "w")
 		json.dump(datosJson,archivo)
 		archivo.close()

@@ -7,7 +7,9 @@ from spriteImagen import *
 from itertools import cycle
 import random
 import json
+import time
 import suite
+
 ROJOCLARO = (255,   0,   0)
 ROJO = (155,   0,   0)
 VERDECLARO = (  0, 255,   0)
@@ -20,24 +22,28 @@ NEGRO= (0, 0, 0)
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
+
 ancho_ventana = 1320
 alto_ventana = 720
+
 pygame.display.set_caption("El entrometido")
 clock = pygame.time.Clock()
+
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 BASICFONT_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
-WHITE     = (255, 255, 255)
+
 ANCHOBOTON=150
 ALTOBOTON=50
 ANCHOCENTROVENTANA= ancho_ventana / 2
 ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
+
 DIRIMAGENES= "./imagenes/"
 
 LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./imagenes/O/", "./imagenes/U/"] 
-
 
 diccionario_imagenes= {}
 
@@ -83,7 +89,9 @@ def main():
 	datosJson =[
 					{
 						"nombre": nombre_usuario,
-						"puntaje_maximo": puntos
+						"puntaje_maximo": puntos,
+						"fecha": time.strftime("%x"),
+						"hora": time.strftime("%X")
 					}
 				]	
 	suite.modificoArchivoLog(datosJson,"logs_el_entrometido.json")	
