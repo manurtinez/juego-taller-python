@@ -138,7 +138,8 @@ def correrJuego(tacho,color,letra,args,puntos):
 			if objeto.arrastra:
 				screen.blit(objeto.image, objeto.rect)
 		suite.drawScore(puntos)
-		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
+		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-500)
 		suite.drawMensaje(msj, 10, 300)
 		screen.blit(tacho.image,tacho.rect)
 		screen.blit(letra.image, (1000,100))

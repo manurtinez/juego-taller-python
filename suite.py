@@ -174,7 +174,7 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
-		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		screen.blit(tacho.image,tacho.rect)
 		screen.blit(objeto_destino.image, (1000,100))
 		objeto.handle_event(event,screen)
@@ -213,7 +213,8 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,repro
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
-		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		screen.blit(objeto_destino.image, objeto_destino.rect)
 		objeto.handle_event(event,screen)
 		screen.blit(objeto.image,objeto.rect)

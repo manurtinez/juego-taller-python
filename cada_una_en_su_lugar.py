@@ -140,7 +140,8 @@ def correrJuego(color,letra,args,puntos):
 			if objeto.arrastra:
 				screen.blit(objeto.image, objeto.rect)
 		suite.drawScore(puntos)
-		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
+		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
 		suite.drawMensaje(msj, ancho_ventana-500, alto_ventana-650)
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
