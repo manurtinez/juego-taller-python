@@ -144,7 +144,7 @@ def correrJuego(tacho,color,letra,args,puntos):
 				screen.blit(objeto.image, objeto.rect)
 		come_vocales.drawScore(puntos)
 		come_vocales.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		come_vocales.drawMensaje(msj, 10, 200)
+		come_vocales.drawMensaje(msj, 10, 300)
 		screen.blit(tacho.image,tacho.rect)
 		screen.blit(letra.image, (1000,100))
 		pygame.display.flip()
