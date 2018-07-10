@@ -61,8 +61,10 @@ sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wa
 pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
 
-def main(nombre_usuario):	
+def main():	
 	"""loop principal"""
+	cargarDiccionario(diccionario_imagenes)
+	nombre_usuario= ingreso_usuario(13)
 	tacho= Imagen((ANCHOCENTROVENTANA,50),DIRIMAGENES+"tacho.png","tacho")
 	tacho.set_rect(200, 1)  
 	puntos= 0

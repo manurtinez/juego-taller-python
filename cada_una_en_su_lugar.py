@@ -108,8 +108,10 @@ def modificoArchivoLog(datosJson,nombre="logs_come_vocales.json"):
  
  
  
-def main(nombre_usuario):	
+def main():	
 	"""loop principal"""
+	cargarDiccionario(diccionario_imagenes)
+	nombre_usuario= ingreso_usuario(13)
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
@@ -371,17 +373,3 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 def imprimo_texto(fuente, x, y, texto, color = (255,255,255)):
     texto_imagen = fuente.render(texto, True, color)
     screen.blit(texto_imagen, (x,y))
-
-
-
-	
-if __name__ == "__main__":
-	cargarDiccionario(diccionario_imagenes)
-	pygame.mixer.music.play(-1, 0.0)
-	pygame.mixer.music.pause()
-	screen.fill(random.choice(colores))		
-	while True:	
-		pantallaInicio(botonInicio)
-		nombre_usuario= ingreso_usuario(13)
-		main(nombre_usuario)
-
