@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import time, Boton
+import time, Boton, suite
 import sys
 import pygame
 from pygame.locals import *
@@ -7,7 +7,7 @@ from spriteImagen import *
 from itertools import cycle
 import random
 import json
-import come_vocales
+import suite
 WHITE = (255, 255, 255)
 BLACK = (  0,   0,   0)
 BRIGHTRED = (255,   0,   0)
@@ -63,20 +63,20 @@ pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
 def main():	
 	"""loop principal"""
-	cargarDiccionario(diccionario_imagenes)
-	nombre_usuario= ingreso_usuario(13)
+	suite.cargarDiccionario(diccionario_imagenes)
+	nombre_usuario= suite.ingreso_usuario(13)
 	tacho= Imagen((ANCHOCENTROVENTANA,50),DIRIMAGENES+"tacho.png","tacho")
 	tacho.set_rect(200, 1)  
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
 	screen.fill(random.choice(colores))
-	come_vocales.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+	suite.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
 	pygame.display.flip()
 	time.sleep(1)
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
-		lista_sprites= come_vocales.inicializarImagenes(dicc_actual)
+		lista_sprites= suite.inicializarImagenes(dicc_actual)
 		copy = lista_sprites[1:]
 		random.shuffle(copy)
 		lista_sprites[1:] = copy
@@ -86,24 +86,29 @@ def main():
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
 		if aux!=4:
-			come_vocales.drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
+			suite.drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
 		time.sleep(1)
 																						
 		aux+=1		
 	screen.fill(random.choice(colores))	
-	come_vocales.drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
-	come_vocales.drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)
+	suite.drawMensaje("FIN DEL JUEGO",((ancho_ventana/2)-ANCHOBOTON)+20,alto_ventana/3.5)	
+	suite.drawMensaje("Tu puntaje fue: "+ str(puntos),(ancho_ventana/2)-ANCHOBOTON,alto_ventana/3)
 	datosJson =[
 					{
 						"nombre": nombre_usuario,
 						"puntaje_maximo": puntos
 					}
 				]	
-	come_vocales.modificoArchivoLog(datosJson,"logs_el_entrometido.json")	
-	come_vocales.pantallaLeaderboard("logs_el_entrometido.json")
-	come_vocales.pantallaInicio(botonJuegoNuevo)													
-	pygame.display.flip()																	
+	suite.modificoArchivoLog(datosJson,"logs_el_entrometido.json")	
+	suite.pantallaLeaderboard("logs_el_entrometido.json")
+	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
+	pygame.display.flip()
+	while True:
+		for event in pygame.event.get():
+			if (event.type == KEYUP):
+				if event.key == K_RETURN:
+					suite.pantallaInicio()																	
 
 
 def correrJuego(tacho,color,letra,args,puntos):
@@ -113,14 +118,14 @@ def correrJuego(tacho,color,letra,args,puntos):
 	consigna = 'cuales no empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
 	msj = ""
 	reproduccionMusica= True
-	come_vocales.drawScore(puntos)
+	suite.drawScore(puntos)
 	while True and correcto!=3:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				come_vocales.terminate()
+				suite.terminate()
 			if (event.type == KEYUP):
 				if event.key == K_ESCAPE:
-					come_vocales.terminate()
+					suite.terminate()
 				if event.key == K_m:
 					if reproduccionMusica:
 						pygame.mixer.music.pause()
@@ -133,7 +138,7 @@ def correrJuego(tacho,color,letra,args,puntos):
 				for objeto in args:
 					if objeto.toca(x,y):
 						puntosAnt = puntos
-						tupla=evaluar(tacho,objeto,letra,event,color,puntos,consigna,msj,correcto,True,args)
+						tupla=suite.evaluarTacho(tacho,objeto,letra,event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
 						correcto=tupla[1]
 						if(puntosAnt>puntos):
@@ -144,9 +149,9 @@ def correrJuego(tacho,color,letra,args,puntos):
 		for objeto in args:
 			if objeto.arrastra:
 				screen.blit(objeto.image, objeto.rect)
-		come_vocales.drawScore(puntos)
-		come_vocales.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		come_vocales.drawMensaje(msj, 10, 300)
+		suite.drawScore(puntos)
+		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+		suite.drawMensaje(msj, 10, 300)
 		screen.blit(tacho.image,tacho.rect)
 		screen.blit(letra.image, (1000,100))
 		pygame.display.flip()
@@ -155,44 +160,44 @@ def correrJuego(tacho,color,letra,args,puntos):
 
 
 
-def evaluar(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
-	while not tacho.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				come_vocales.terminate()
-			if (event.type == KEYUP):
-				if event.key == K_ESCAPE:
-					come_vocales.terminate()
-				if event.key == K_m:
-					if reproduccionMusica:
-						pygame.mixer.music.pause()
-						reproduccionMusica= False
-					else:
-						pygame.mixer.music.unpause()
-						reproduccionMusica= True
-		screen.fill(color)
-		for obj in args:
-			if obj.arrastra:
-				screen.blit(obj.image,obj.rect)
-		come_vocales.drawScore(puntos)
-		come_vocales.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
-		screen.blit(tacho.image,tacho.rect)
-		screen.blit(objeto_destino.image, (1000,100))
-		objeto.handle_event(event,screen)
-		screen.blit(objeto.image,objeto.rect)
-		pygame.display.flip()
-		clock.tick(60)
-	if tacho.rect.colliderect(objeto.rect):
-		if objeto.arrastra:
-			if objeto.nombre[0].upper() != objeto_destino.nombre:
-				objeto.arrastra=False
-				puntos+= 3
-				correcto=correcto+1
-			else:
-				puntos-= 1
-				objeto.rect.topleft=objeto.rect_aux
-	return puntos,correcto
+# def evaluar(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+# 	"""para evaluar si la imagen colisionada corresponde con la letra o no"""
+# 	while not tacho.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
+# 		for event in pygame.event.get():
+# 			if event.type == pygame.QUIT:
+# 				suite.terminate()
+# 			if (event.type == KEYUP):
+# 				if event.key == K_ESCAPE:
+# 					suite.terminate()
+# 				if event.key == K_m:
+# 					if reproduccionMusica:
+# 						pygame.mixer.music.pause()
+# 						reproduccionMusica= False
+# 					else:
+# 						pygame.mixer.music.unpause()
+# 						reproduccionMusica= True
+# 		screen.fill(color)
+# 		for obj in args:
+# 			if obj.arrastra:
+# 				screen.blit(obj.image,obj.rect)
+# 		suite.drawScore(puntos)
+# 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-650)
+# 		screen.blit(tacho.image,tacho.rect)
+# 		screen.blit(objeto_destino.image, (1000,100))
+# 		objeto.handle_event(event,screen)
+# 		screen.blit(objeto.image,objeto.rect)
+# 		pygame.display.flip()
+# 		clock.tick(60)
+# 	if tacho.rect.colliderect(objeto.rect):
+# 		if objeto.arrastra:
+# 			if objeto.nombre[0].upper() != objeto_destino.nombre:
+# 				objeto.arrastra=False
+# 				puntos+= 3
+# 				correcto=correcto+1
+# 			else:
+# 				puntos-= 1
+# 				objeto.rect.topleft=objeto.rect_aux
+# 	return puntos,correcto
 
 def seleccionDeImagenes(dicc, aux):
 	"""retorna diccionario cargado con 5 imagenes aleatorias"""
@@ -228,14 +233,3 @@ def seleccionDeImagenes(dicc, aux):
 		lis.append(random.sample(dicc["E"],1)[0])
 		dicc_aux["U"]= lis
 	return dicc_aux
-
-
-if __name__ == "__main__":
-	come_vocales.cargarDiccionario(diccionario_imagenes)
-	pygame.mixer.music.play(-1, 0.0)
-	pygame.mixer.music.pause()
-	screen.fill(random.choice(colores))		
-	while True:	
-		come_vocales.pantallaInicio(botonInicio)
-		nombre_usuario= come_vocales.ingreso_usuario(13)
-		main(nombre_usuario)
