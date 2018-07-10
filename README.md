@@ -12,7 +12,7 @@ INICIO
     
 ADICIONAL
 	
-	El juego "cada_una_en_su_lugar" NO esta terminado y no cumple su objetivo
+	El juego "cada_uno_en_su_lugar" NO esta terminado y no cumple su objetivo
     
 CONTRIBUYENTES
 
