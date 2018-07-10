@@ -12,6 +12,6 @@ INICIO
     
 CONTRIBUYENTES
 
-    Martine, Manuel
+    Martinez, Manuel
     Ramirez, Agustin
     Sandler, Tomás
