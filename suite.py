@@ -21,7 +21,7 @@ NEGRO= (0, 0, 0)
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
 pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
-ancho_ventana = 1320
+ancho_ventana = 1280
 alto_ventana = 720
 pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()
@@ -71,7 +71,7 @@ def pantallaLeaderboard(nombre):
 		if partida["puntaje_maximo"] > puntaje_maximo:
 			puntaje_maximo= partida["puntaje_maximo"]
 			nom_punt_max= partida["nombre"]
-	suite.drawMensaje("puntaje mas alto "+str(puntaje_maximo)+", lo hizo "+'"'+nom_punt_max+'"', 290, 50)
+	drawMensaje("puntaje mas alto "+str(puntaje_maximo)+", lo hizo "+'"'+nom_punt_max+'"', 290, 50)
 
 
 def modificoArchivoLog(datosJson,nombre):
@@ -106,6 +106,7 @@ def modificoArchivoLog(datosJson,nombre):
 def pantallaInicio():
     """Carga la pantalla inicial del juego"""
     screen.fill(random.choice(colores))
+    drawMensaje("elegi un juego!", 500, 50)
     pygame.mixer.music.pause()	
     while True:
 
