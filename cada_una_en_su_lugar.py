@@ -122,7 +122,7 @@ def correrJuego(color,letra,args,puntos):
 				suite.terminate()
 			if (event.type == KEYUP):
 				if event.key == K_ESCAPE:
-					suite.terminate()
+					suite.pantallaInicio()
 				if event.key == K_m:
 					if reproduccionMusica:
 						pygame.mixer.music.pause()
