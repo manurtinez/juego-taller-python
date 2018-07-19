@@ -65,7 +65,7 @@ def main(nombre_usuario):
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
 	pygame.display.flip()
 	time.sleep(1)
-	while True and aux != 1:           
+	while True and aux != 5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 		lista_sprites= suite.inicializarImagenesCadaUno(dicc_actual)
 		copy = lista_sprites[1:]
@@ -75,7 +75,8 @@ def main(nombre_usuario):
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
 		if aux!=4:
-			suite.drawMensaje("EXCELENTE!", ancho_ventana/2.4, alto_ventana/3)
+			suite.drawMensaje("MUY BIEN!", ancho_ventana/2.4, alto_ventana/3.5)
+			suite.drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
 		time.sleep(1)
 																						
@@ -94,15 +95,12 @@ def main(nombre_usuario):
 	suite.modificoArchivoLog(datosJson,"logs_cada_uno_en_su_lugar.json")	
 	suite.pantallaLeaderboard("logs_cada_uno_en_su_lugar.json")
 	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
-	suite.drawMensaje("apreta 1 para jugar de nuevo",ancho_ventana/2,alto_ventana - 150)
 	pygame.display.flip()
 	while True:
 		for event in pygame.event.get():
 			if (event.type == KEYUP):
 				if event.key == K_RETURN:
-					suite.pantallaInicio()	
-				if event.key == K_1:
-					main(nombre_usuario)																
+					suite.pantallaInicio()																	
 			if event.type == pygame.QUIT:
 				suite.terminate()
 
@@ -115,6 +113,7 @@ def correrJuego(color,letra,args,puntos):
 	reproduccionMusica= True
 	suite.drawScore(puntos)
 	while True and correcto!=3:
+		screen.fill(color)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				suite.terminate()
@@ -136,13 +135,6 @@ def correrJuego(color,letra,args,puntos):
 						tupla=suite.evaluar_lugar(objeto[2],objeto[1],event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
 						correcto=tupla[1]
-						if(puntosAnt>puntos):
-							msj = 'incorrecto!!'
-							sonidoMal.play()
-						elif(puntosAnt<puntos):
-							msj = 'correcto!!'
-							sonidoBien.play()		
-		screen.fill(color)
 		for objeto in args:
 			if objeto[0].arrastra:
 				screen.blit(objeto[0].image, objeto[0].rect)
@@ -151,10 +143,11 @@ def correrJuego(color,letra,args,puntos):
 		suite.drawScore(puntos)
 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
-		suite.drawMensaje(msj, ancho_ventana-500, alto_ventana-650)
+		
 		screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
 		clock.tick(60)
+
 	return puntos
 
 
@@ -166,8 +159,47 @@ def seleccionDeImagenes(dicc, aux):
 	if aux == 0:
 		for i in range(3):
 			valor=random.choice(lis_aux)
-			lis.append(random.sample(dicc[valor],1)[0])
+			imagen=random.sample(dicc[valor],1)[0]
+			lis.append(imagen)
 			lis_aux.remove(valor)
+			dicc[valor].remove(imagen)
+			
+		dicc_aux[1]= lis
+	if aux == 1:
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			imagen=random.sample(dicc[valor],1)[0]
+			lis.append(imagen)
+			lis_aux.remove(valor)
+			dicc[valor].remove(imagen)
+			
+		dicc_aux[1]= lis
+	if aux == 2:
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			imagen=random.sample(dicc[valor],1)[0]
+			lis.append(imagen)
+			lis_aux.remove(valor)
+			dicc[valor].remove(imagen)
+			
+		dicc_aux[1]= lis
+	if aux == 3:
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			imagen=random.sample(dicc[valor],1)[0]
+			lis.append(imagen)
+			lis_aux.remove(valor)
+			dicc[valor].remove(imagen)
+			
+		dicc_aux[1]= lis
+	if aux == 4:
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			imagen=random.sample(dicc[valor],1)[0]
+			lis.append(imagen)
+			lis_aux.remove(valor)
+			dicc[valor].remove(imagen)
+			
 		dicc_aux[1]= lis
 
 	return dicc_aux                                      

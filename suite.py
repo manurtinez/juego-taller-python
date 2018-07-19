@@ -46,6 +46,10 @@ FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 DIRIMAGENES= "./imagenes/"
 
+
+sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
+sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
+
 botonComeVocales = Boton.boton(ROJO, AZUL, screen, "Come Vocales", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
                             ALTOCENTROVENTANA - 30, ANCHOBOTON + 50, ALTOBOTON, BLANCO, -30, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
@@ -200,7 +204,7 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 				objeto.rect.topleft=objeto.rect_aux
 	return puntos,correcto
 def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-	"""evalua si la imagen colisionada corresponde con la letra o no"""
+	"""evalua si el texto colisiona con el rectangulo o no"""
 	ok=True
 	while not objeto_destino.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0]and ok:
 		for event in pygame.event.get():
@@ -223,6 +227,7 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 						puntos-=1
 						objeto.rect.topleft=objeto.rect_aux.topleft
 						ok=False
+						sonidoMal.play()
 		screen.fill(color)
 		for obj in args:
 			if obj[0].nombre!=objeto.nombre: 
@@ -244,6 +249,7 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 			objeto.arrastra=False
 			puntos+= 3
 			correcto=correcto+1
+			sonidoBien.play()
 	return puntos,correcto
 
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
@@ -316,7 +322,6 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 				# caps entry?
 				if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:        #si se ingresa en mayusculas
 					cadena += chr(event.key).upper()
-				# lowercase entry
 				else:														#si es minuscula
 					cadena += chr(event.key)
 			elif event.type == KEYUP:											
