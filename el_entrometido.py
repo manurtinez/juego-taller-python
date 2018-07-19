@@ -58,7 +58,7 @@ def main():
 	suite.cargarDiccionario(diccionario_imagenes)
 	nombre_usuario= suite.ingreso_usuario(13)
 	tacho= Imagen((ANCHOCENTROVENTANA,50),DIRIMAGENES+"tacho.png","tacho")
-	tacho.set_rect(200, 1)  
+	tacho.set_rect(200, 90)  
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario

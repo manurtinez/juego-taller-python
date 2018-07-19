@@ -363,7 +363,7 @@ def inicializarImagenes(dicc):
 	lis = copy[:]	
 	imagen= Imagen((ancho_aux+ancho_ventana/2.4, alto_aux+30), DIRIMAGENES+"Letras"+"/"+letra.lower()+"_letra_"+letra+".png", letra)
 	lista_sprites.append(imagen)
-	imagen.set_rect(200, 1)        # mod. rectangulo de letra
+	imagen.set_rect(200, 90)        # mod. rectangulo de letra
 	alto_aux=500
 	for imagen in lis:
 		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
