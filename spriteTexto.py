@@ -16,7 +16,8 @@ class Texto(pygame.sprite.Sprite):
 		pygame.sprite.Sprite.__init__(self)
 		self.texto = fuente.render(msj, True, (255,255,255))
 		self.rect = self.texto.get_rect()
-		self.rect_aux=(1,1)
+		self.rect_aux=self.texto.get_rect()
+		self.rect_aux.topleft=position
 		self.rect.topleft=position
 		self.nombre= nombre
 		self.arrastra=True
@@ -42,10 +43,13 @@ class Texto(pygame.sprite.Sprite):
 		"""Mueve el texto en pantalla"""
 		if pygame.mouse.get_pressed()[0]:
 			x,y =pygame.mouse.get_pos()
-			x-=self.position[0]/2
-			y-=self.position[1]/2
-			self.rect.x=x
-			self.rect.y=y
+			#x-=self.position[0]
+			#y-=self.position[1]
+			self.rect.x=x-70
+			self.rect.y=y-10
+			if len(self.nombre)<5:
+				self.rect.x=x-30
+				self.rect.y=y-10
 		if self.rect.left < 0:
 			self.rect.left = 0
 		elif self.rect.right > 1320:

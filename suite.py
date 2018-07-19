@@ -2,11 +2,13 @@ import come_vocales, pygame, el_entrometido, Boton, random, sys, cada_una_en_su_
 import time, Boton, suite
 import sys
 import pygame
+import string
 from pygame.locals import *
 from spriteImagen import *
 from itertools import cycle
 import random
 import json
+from spriteTexto import *
 
 ROJOCLARO = (255,   0,   0)
 ROJO = (155,   0,   0)
@@ -30,6 +32,7 @@ pygame.display.set_caption("Conectar")
 clock = pygame.time.Clock()
 
 FUENTE_BASICA = pygame.font.Font('freesansbold.ttf', 18)
+FUENTE_BASICA_2 = pygame.font.Font('freesansbold.ttf', 25)
 FUENTE_BASICA_NOMBRE = pygame.font.Font('freesansbold.ttf', 30)
 
 ANCHOBOTON=150
@@ -193,6 +196,52 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 				puntos-= 1
 				objeto.rect.topleft=objeto.rect_aux
 	return puntos,correcto
+def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+	"""evalua si la imagen colisionada corresponde con la letra o no"""
+	ok=True
+	while not objeto_destino.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0]and ok:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				terminate()
+			if (event.type == KEYUP):
+				if event.key == K_ESCAPE:
+					terminate()
+				if event.key == K_m:
+					if reproduccionMusica:
+						pygame.mixer.music.pause()
+						reproduccionMusica= False
+					else:
+						pygame.mixer.music.unpause()
+						reproduccionMusica= True
+		if ok:
+			for dato in args:
+				if dato[0].nombre!=objeto.nombre and ok: 
+					if dato[1].rect.contains(objeto.rect)and pygame.mouse.get_pressed()[0] and ok:
+						puntos-=1
+						objeto.rect.topleft=objeto.rect_aux.topleft
+						ok=False
+		screen.fill(color)
+		for obj in args:
+			if obj[0].nombre!=objeto.nombre: 
+				if obj[1].arrastra:
+					screen.blit(obj[0].image,obj[0].rect)
+					screen.blit(obj[1].image,obj[1].rect)
+					screen.blit(obj[2].texto,obj[2].rect)
+		drawScore(puntos)
+		drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
+		screen.blit(objeto_destino.image, objeto_destino.rect)
+		if objeto.arrastra and ok:
+			objeto.handle_event(event,screen)
+		screen.blit(objeto.texto,objeto.rect)
+		pygame.display.flip()
+		clock.tick(60)
+	if objeto_destino.rect.contains(objeto.rect):
+		if objeto.arrastra:
+			objeto.arrastra=False
+			puntos+= 3
+			correcto=correcto+1
+	return puntos,correcto
 
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
 	"""evalua si la imagen colisionada corresponde con la letra o no"""
@@ -326,12 +375,26 @@ def inicializarImagenesCadaUno(dicc):
 	letra= list(dicc.keys())[0]     # almacena en letra la letra del direc.
 	lis= dicc[letra]				
 	alto_aux=300
+	valores=[]
 	for imagen in lis:
+		valores.append((20+ancho_aux+ancho_ventana-resta_ancho,alto_aux+300))
+		resta_ancho-= 280 
+	resta_ancho=ancho_ventana
+	for imagen in lis:
+		lista_datos=[]
+		valor=random.choice(valores)
+		valores.remove(valor)
+		palabra=Texto(valor, FUENTE_BASICA_2,imagen.replace('.png', '').upper(), imagen.replace('.png', '').upper())
 		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
 		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
 		imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux), ruta, imagen)
+		imagen_rect=Imagen((ancho_aux+ancho_ventana-resta_ancho,alto_aux+200),DIRIMAGENES+"Letras/rect.jpg",imagen.nombre)
+		#imagen_rect.set_rect(ancho_aux+ancho_ventana-resta_ancho-130,80)
+		lista_datos.append(imagen)
+		lista_datos.append(imagen_rect)
+		lista_datos.append(palabra)
 		resta_ancho-= 280 
-		lista_sprites.append(imagen)
+		lista_sprites.append(lista_datos)
 	return lista_sprites
 
 def terminate():

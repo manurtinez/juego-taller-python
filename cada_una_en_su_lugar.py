@@ -73,9 +73,7 @@ def main():
 		lista_sprites= suite.inicializarImagenesCadaUno(dicc_actual)
 		copy = lista_sprites[1:]
 		random.shuffle(copy)
-		lista_sprites[1:] = copy
-		tupla=tuple(lista_sprites[1:])
-		puntos=correrJuego(random.choice(colores),lista_sprites[0], tupla , puntos)
+		puntos=correrJuego(random.choice(colores),lista_sprites[0][0], lista_sprites , puntos)
 		time.sleep(0.5)
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
@@ -133,21 +131,23 @@ def correrJuego(color,letra,args,puntos):
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
 				for objeto in args:
-					if objeto.toca(x,y):
+					if objeto[2].toca(x,y):
 						puntosAnt = puntos
-						tupla=suite.evaluar(objeto,letra,event,color,puntos,consigna,msj,correcto,True,args)
+						tupla=suite.evaluar_lugar(objeto[2],objeto[1],event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
 						correcto=tupla[1]
 						if(puntosAnt>puntos):
-							msj = 'incorrecto!! era {}'.format(objeto.nombre[:-4])
+							msj = 'incorrecto!!'
 							sonidoMal.play()
 						elif(puntosAnt<puntos):
-							msj = 'correcto!! es {}'.format(objeto.nombre[:-4])
+							msj = 'correcto!!'
 							sonidoBien.play()		
 		screen.fill(color)
 		for objeto in args:
-			if objeto.arrastra:
-				screen.blit(objeto.image, objeto.rect)
+			if objeto[0].arrastra:
+				screen.blit(objeto[0].image, objeto[0].rect)
+				screen.blit(objeto[1].image,objeto[1].rect)
+				screen.blit(objeto[2].texto,objeto[2].rect)
 		suite.drawScore(puntos)
 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
@@ -164,18 +164,21 @@ def seleccionDeImagenes(dicc, aux):
 	lis=[]
 	dicc_aux={}
 	if aux == 0:
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			lis.append(random.sample(dicc[valor],1)[0])
+			lis_aux.remove(valor)
 		dicc_aux[1]= lis
 	elif aux == 1:
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			lis.append(random.sample(dicc[valor],1)[0])
+			lis_aux.remove(valor)
 		dicc_aux[2]= lis
 	elif aux == 2:
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
-		lis.append(random.sample(dicc[random.choice(lis_aux)],1)[0])
+		for i in range(3):
+			valor=random.choice(lis_aux)
+			lis.append(random.sample(dicc[valor],1)[0])
+			lis_aux.remove(valor)
 		dicc_aux[3]= lis
 	return dicc_aux                                      
