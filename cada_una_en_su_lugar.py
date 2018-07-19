@@ -57,18 +57,15 @@ pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
  
 
  
-def main():	
+def main(nombre_usuario):	
 	"""loop principal"""
 	suite.cargarDiccionario(diccionario_imagenes)
-	nombre_usuario= suite.ingreso_usuario(13)
 	puntos= 0
 	pygame.mixer.music.play(-1, 0.0)
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
-	screen.fill(random.choice(colores))
-	suite.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
 	pygame.display.flip()
 	time.sleep(1)
-	while True and aux!=5:           
+	while True and aux != 1:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 		lista_sprites= suite.inicializarImagenesCadaUno(dicc_actual)
 		copy = lista_sprites[1:]
@@ -78,7 +75,7 @@ def main():
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
 		if aux!=4:
-			suite.drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
+			suite.drawMensaje("EXCELENTE!", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
 		time.sleep(1)
 																						
@@ -94,23 +91,26 @@ def main():
 						"hora": time.strftime("%X")
 					}
 				]	
-	suite.modificoArchivoLog(datosJson)	
-	suite.pantallaLeaderboard()
-	suite.pantallaLeaderboard("logs_el_entrometido.json")
+	suite.modificoArchivoLog(datosJson,"logs_cada_uno_en_su_lugar.json")	
+	suite.pantallaLeaderboard("logs_cada_uno_en_su_lugar.json")
 	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
+	suite.drawMensaje("apreta 1 para jugar de nuevo",ancho_ventana/2,alto_ventana - 150)
 	pygame.display.flip()
 	while True:
 		for event in pygame.event.get():
 			if (event.type == KEYUP):
 				if event.key == K_RETURN:
-					suite.pantallaInicio()																	
-
+					suite.pantallaInicio()	
+				if event.key == K_1:
+					main(nombre_usuario)																
+			if event.type == pygame.QUIT:
+				suite.terminate()
 
 def correrJuego(color,letra,args,puntos):
 	"""loop del juego al clickear en iniciar"""
 	puntosAnt=0
 	correcto=0
-	consigna = 'cuales empiezan con {}?'.format(os.path.splitext(letra.nombre)[0])
+	consigna = 'Coloca la palabra en su lugar!'
 	msj = ""
 	reproduccionMusica= True
 	suite.drawScore(puntos)
@@ -169,16 +169,5 @@ def seleccionDeImagenes(dicc, aux):
 			lis.append(random.sample(dicc[valor],1)[0])
 			lis_aux.remove(valor)
 		dicc_aux[1]= lis
-	elif aux == 1:
-		for i in range(3):
-			valor=random.choice(lis_aux)
-			lis.append(random.sample(dicc[valor],1)[0])
-			lis_aux.remove(valor)
-		dicc_aux[2]= lis
-	elif aux == 2:
-		for i in range(3):
-			valor=random.choice(lis_aux)
-			lis.append(random.sample(dicc[valor],1)[0])
-			lis_aux.remove(valor)
-		dicc_aux[3]= lis
+
 	return dicc_aux                                      

@@ -133,7 +133,10 @@ def pantallaInicio():
         if botonEntrometido.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
         	el_entrometido.main()
         if botonCadaUnaEnSuLugar.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
-        	cada_una_en_su_lugar.main()
+            nombre_usuario= suite.ingreso_usuario(13)
+            screen.fill(random.choice(colores))
+            suite.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+            cada_una_en_su_lugar.main(nombre_usuario)
         elif botonSalir.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             terminate()
 
