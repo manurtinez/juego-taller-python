@@ -50,6 +50,9 @@ class Texto(pygame.sprite.Sprite):
 			if len(self.nombre)<5:
 				self.rect.x=x-30
 				self.rect.y=y-10
+			if len(self.nombre)==1:
+				self.rect.x=x-5
+				self.rect.y=y-10
 		if self.rect.left < 0:
 			self.rect.left = 0
 		elif self.rect.right > 1320:

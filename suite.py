@@ -253,6 +253,63 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 			sonidoBien.play()
 	return puntos,correcto
 
+def evaluar_lugar_letra(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+	"""evalua si el texto colisiona con el rectangulo o no"""
+	ok=True
+	while pygame.mouse.get_pressed()[0]and ok:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				terminate()
+			if (event.type == KEYUP):
+				if event.key == K_ESCAPE:
+					terminate()
+				if event.key == K_m:
+					if reproduccionMusica:
+						pygame.mixer.music.pause()
+						reproduccionMusica= False
+					else:
+						pygame.mixer.music.unpause()
+						reproduccionMusica= True
+		if ok:
+			for dato in args:
+				for valor in dato[1]:
+					if valor.rect.contains(objeto.rect)and pygame.mouse.get_pressed()[0] and ok and valor.nombre.lower()!=objeto.nombre.lower():
+						puntos-=1
+						objeto.rect.topleft=objeto.rect_aux.topleft
+						ok=False
+						sonidoMal.play()
+					elif valor.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0] and ok and valor.nombre.lower()==objeto.nombre.lower():
+						if objeto.arrastra:
+							objeto.arrastra=False
+							puntos+= 3
+							correcto=correcto+1
+							sonidoBien.play()
+		screen.fill(color)
+		for obj in args:
+			if obj[0].nombre!=objeto.nombre:
+				for dato in obj[1]:
+						screen.blit(obj[0].image,obj[0].rect)
+						screen.blit(dato.image,dato.rect)
+				for dato in obj[2]:
+						screen.blit(dato.texto,dato.rect)
+		drawScore(puntos)
+		drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
+		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
+		screen.blit(objeto_destino.image, objeto_destino.rect)
+		if objeto.arrastra and ok:
+			objeto.handle_event(event,screen)
+		screen.blit(objeto.texto,objeto.rect)
+		pygame.display.flip()
+		clock.tick(260)
+#	if objeto_destino.rect.contains(objeto.rect):
+#		if objeto.arrastra:
+#			objeto.arrastra=False
+#			puntos+= 3
+#			correcto=correcto+1
+#			sonidoBien.play()
+	return puntos,correcto
+
+
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
 	"""evalua si la imagen colisionada corresponde con la letra o no"""
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
@@ -320,7 +377,7 @@ def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 				siguiente_parpadeo = next(ciclo_parpadeo)
 			
 			elif event.type == KEYUP and event.key in valores_permitidos and len(cadena) < largo_max:     #si el caracter cumple
-				# caps entry?
+				
 				if pygame.key.get_mods() & KMOD_SHIFT or pygame.key.get_mods() & KMOD_CAPS:        #si se ingresa en mayusculas
 					cadena += chr(event.key).upper()
 				else:														#si es minuscula
@@ -405,6 +462,51 @@ def inicializarImagenesCadaUno(dicc):
 		resta_ancho-= 280 
 		lista_sprites.append(lista_datos)
 	return lista_sprites
+
+def inicializarImagenesLetras(dicc):
+	"""retorna una lista con las imagenes del directorio"""
+	ancho_aux= 50
+	alto_aux= 50
+	resta_ancho= ancho_ventana
+	lista_sprites=[]	#lista de los sprites para poder controlar los eventos
+	letra= list(dicc.keys())[0]     # almacena en letra la letra del direc.
+	lis= dicc[letra]				
+	alto_aux=300
+	valores=[]
+	dicc_aux={}
+	for imagen in lis:
+		dicc_aux[imagen]=[]
+		for dato in imagen.replace('.png', ''):
+			dicc_aux[imagen].append((20+ancho_aux+ancho_ventana-resta_ancho,alto_aux+300))
+			resta_ancho-= 40 
+		resta_ancho -=170
+	resta_ancho=ancho_ventana
+	resta_ancho_aux=resta_ancho
+	for imagen in lis:
+		lista_datos=[]
+		lis_letras=[]
+		lis_letras_rect=[]
+		cant=0
+		for dato in imagen.replace('.png', ''):
+			valor=random.choice(dicc_aux[imagen])
+			dicc_aux[imagen].remove(valor)
+			letra=Texto(valor, FUENTE_BASICA_2,dato.upper(), dato.upper())
+			letra_rect=	Imagen((ancho_aux+ancho_ventana-resta_ancho_aux,alto_aux+200),DIRIMAGENES+"Letras/letra_rect.jpg",dato)
+			lis_letras.append(letra)
+			lis_letras_rect.append(letra_rect)
+			resta_ancho_aux-=40
+			cant+=50
+		resta_ancho_aux-=130
+		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
+		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
+		imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
+		lista_datos.append(imagen)
+		lista_datos.append(lis_letras_rect)
+		lista_datos.append(lis_letras)
+		resta_ancho-= 370 
+		lista_sprites.append(lista_datos)
+	return lista_sprites
+
 
 def terminate():
 	"""finaliza ejecucion y cierra el programa"""

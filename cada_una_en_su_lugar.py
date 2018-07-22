@@ -144,9 +144,10 @@ def correrJuego(color,letra,args,puntos):
 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
 		
-		screen.blit(letra.image, letra.rect)
-		pygame.display.flip()
+	#	screen.blit(letra.image, letra.rect)
 		clock.tick(60)
+		pygame.display.flip()
+		
 
 	return puntos
 
