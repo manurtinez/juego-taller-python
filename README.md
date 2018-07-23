@@ -10,9 +10,6 @@ INICIO
     
     El script principal para iniciar el juego es "suite.py"
     
-ADICIONAL
-	
-	El juego "cada_uno_en_su_lugar" NO esta terminado y no cumple su objetivo
     
 CONTRIBUYENTES
 
