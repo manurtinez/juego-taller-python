@@ -8,6 +8,7 @@ from itertools import cycle
 import random
 import time
 import json
+import separasilabas
  
 
 ROJOCLARO = (255,   0,   0)
@@ -67,9 +68,7 @@ def main(nombre_usuario):
 	time.sleep(1)
 	while True and aux != 5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
-		lista_sprites= suite.inicializarImagenesCadaUno(dicc_actual)
-		copy = lista_sprites[1:]
-		random.shuffle(copy)
+		lista_sprites= suite.inicializarImagenesConSilabas(dicc_actual)
 		puntos=correrJuego(random.choice(colores),lista_sprites[0][0], lista_sprites , puntos)
 		time.sleep(0.5)
 		screen.fill(random.choice(colores))
@@ -92,8 +91,8 @@ def main(nombre_usuario):
 						"hora": time.strftime("%X")
 					}
 				]	
-	suite.modificoArchivoLog(datosJson,"logs_cada_uno_en_su_lugar.json")	
-	suite.pantallaLeaderboard("logs_cada_uno_en_su_lugar.json")
+	suite.modificoArchivoLog(datosJson,"logs_acomodo_y_formo_con_silaba.json")	
+	suite.pantallaLeaderboard("logs_acomodo_y_formo_con_silaba.json")
 	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
 	pygame.display.flip()
 	while True:
@@ -106,13 +105,19 @@ def main(nombre_usuario):
 
 def correrJuego(color,letra,args,puntos):
 	"""loop del juego al clickear en iniciar"""
+	args[0][0].rect.topleft=(100,200)
+	args[1][0].rect.topleft=(1040,200)
+	silabas = separasilabas.silabizer()
 	puntosAnt=0
 	correcto=0
 	consigna = 'Coloca la palabra en su lugar!'
 	msj = ""
+	total=0
 	reproduccionMusica= True
 	suite.drawScore(puntos)
-	while True and correcto!=3:
+	for valor in args:
+		total=total+len(silabas(valor[0].nombre.replace('.png', '')))
+	while True and correcto!=total:
 		screen.fill(color)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -130,24 +135,27 @@ def correrJuego(color,letra,args,puntos):
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
 				for objeto in args:
-					if objeto[2].toca(x,y):
-						puntosAnt = puntos
-						tupla=suite.evaluar_lugar(objeto[2],objeto[1],event,color,puntos,consigna,msj,correcto,True,args)
-						puntos=tupla[0]
-						correcto=tupla[1]
+					valor_lis=0
+					for valor in objeto[2]:
+						if valor.toca(x,y):
+							puntosAnt = puntos
+							tupla=suite.evaluar_lugar_letra(valor,objeto[1][valor_lis],event,color,puntos,consigna,msj,correcto,True,args)
+							puntos=tupla[0]
+							correcto=tupla[1]
+						valor_lis+=1
 		for objeto in args:
-			if objeto[0].arrastra:
-				screen.blit(objeto[0].image, objeto[0].rect)
-				screen.blit(objeto[1].image,objeto[1].rect)
-				screen.blit(objeto[2].texto,objeto[2].rect)
+			screen.blit(objeto[0].image, objeto[0].rect)
+			for i in objeto[1]:
+				screen.blit(i.image,i.rect)
+		for objeto in args:
+			for i in objeto[2]:
+				screen.blit(i.texto,i.rect)
 		suite.drawScore(puntos)
 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
 		
-	#	screen.blit(letra.image, letra.rect)
-		pygame.display.flip()
 		clock.tick(60)
-
+		pygame.display.flip()
 	return puntos
 
 
@@ -157,7 +165,7 @@ def seleccionDeImagenes(dicc, aux):
 	lis=[]
 	dicc_aux={}
 	if aux == 0:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -166,7 +174,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 1:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -175,7 +183,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 2:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -184,7 +192,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 3:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -193,7 +201,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 4:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -202,4 +210,4 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 
-	return dicc_aux                                      
+	return dicc_aux                                   

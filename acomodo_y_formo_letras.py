@@ -65,14 +65,14 @@ def main(nombre_usuario):
 	aux=0 # indice que hace referencia a la letra a usar del diccionario
 	pygame.display.flip()
 	time.sleep(1)
-	while True and aux != 5:           
+	while True and aux != 3:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
 		lista_sprites= suite.inicializarImagenesLetras(dicc_actual)
 		puntos=correrJuego(random.choice(colores),lista_sprites[0][0], lista_sprites , puntos)
 		time.sleep(0.5)
 		screen.fill(random.choice(colores))
 		pygame.display.flip()
-		if aux!=4:
+		if aux!=2:
 			suite.drawMensaje("MUY BIEN!", ancho_ventana/2.4, alto_ventana/3.5)
 			suite.drawMensaje("SIGUIENTE NIVEL", ancho_ventana/2.4, alto_ventana/3)
 			pygame.display.flip()
@@ -90,8 +90,8 @@ def main(nombre_usuario):
 						"hora": time.strftime("%X")
 					}
 				]	
-	suite.modificoArchivoLog(datosJson,"logs_acomodo_y_formo.json")	
-	suite.pantallaLeaderboard("logs_acomodo_y_formo.json")
+	suite.modificoArchivoLog(datosJson,"logs_acomodo_y_formo_con_letra.json")	
+	suite.pantallaLeaderboard("logs_acomodo_y_formo_con_letra.json")
 	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
 	pygame.display.flip()
 	while True:
@@ -104,6 +104,8 @@ def main(nombre_usuario):
 
 def correrJuego(color,letra,args,puntos):
 	"""loop del juego al clickear en iniciar"""
+	args[0][0].rect.topleft=(100,200)
+	args[1][0].rect.topleft=(1040,200)
 	puntosAnt=0
 	correcto=0
 	consigna = 'Coloca la palabra en su lugar!'
@@ -143,6 +145,7 @@ def correrJuego(color,letra,args,puntos):
 			screen.blit(objeto[0].image, objeto[0].rect)
 			for i in objeto[1]:
 				screen.blit(i.image,i.rect)
+		for objeto in args:
 			for i in objeto[2]:
 				screen.blit(i.texto,i.rect)
 		suite.drawScore(puntos)
@@ -160,7 +163,7 @@ def seleccionDeImagenes(dicc, aux):
 	lis=[]
 	dicc_aux={}
 	if aux == 0:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -169,7 +172,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 1:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -178,7 +181,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 2:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -187,7 +190,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 3:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -196,7 +199,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 4:
-		for i in range(3):
+		for i in range(2):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -206,5 +209,3 @@ def seleccionDeImagenes(dicc, aux):
 		dicc_aux[1]= lis
 
 	return dicc_aux                                   
-while True:
-	main("juan")

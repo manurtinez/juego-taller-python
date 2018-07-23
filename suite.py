@@ -1,4 +1,4 @@
-import come_vocales, pygame, el_entrometido, Boton, random, sys, cada_una_en_su_lugar, os
+import come_vocales, pygame, el_entrometido, Boton, random, sys, cada_una_en_su_lugar, os,acomodo_y_formo_letras,acomodo_y_formo_con_silabas
 import time, Boton, suite
 import sys
 import pygame
@@ -9,7 +9,7 @@ from itertools import cycle
 import random
 import json
 from spriteTexto import *
-
+import separasilabas
 ROJOCLARO = (255,   0,   0)
 ROJO = (155,   0,   0)
 VERDECLARO = (  0, 255,   0)
@@ -50,8 +50,19 @@ DIRIMAGENES= "./imagenes/"
 sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
 sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
 
+botonAcomodoYFormo = Boton.boton(ROJO, AZUL, screen, "Acomodo y Formo", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA - 240, ANCHOBOTON + 110, ALTOBOTON, BLANCO, -240, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
+
 botonComeVocales = Boton.boton(ROJO, AZUL, screen, "Come Vocales", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
                             ALTOCENTROVENTANA - 30, ANCHOBOTON + 50, ALTOBOTON, BLANCO, -30, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
+botonConSilabas = Boton.boton(ROJO, AZUL, screen, "Con Silabas", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA - 100, ANCHOBOTON + 110, ALTOBOTON, BLANCO, -100, ANCHOCENTROVENTANA,
+                            ALTOCENTROVENTANA, FUENTEBOTON)
+
+botonConLetras = Boton.boton(ROJO, AZUL, screen, "Con Letras", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
+                            ALTOCENTROVENTANA - 0, ANCHOBOTON + 50, ALTOBOTON, BLANCO, 0, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
 botonEntrometido = Boton.boton(ROJO, AZUL, screen, "El Entrometido", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 20,
@@ -61,8 +72,8 @@ botonEntrometido = Boton.boton(ROJO, AZUL, screen, "El Entrometido", ANCHOCENTRO
 botonSalir = Boton.boton(ROJO, AZUL, screen, "SALIR", ANCHOCENTROVENTANA - (ANCHOBOTON / 2),
                            ALTOCENTROVENTANA + 50, ANCHOBOTON, ALTOBOTON, BLANCO, 50, ANCHOCENTROVENTANA,
                            ALTOCENTROVENTANA, FUENTEBOTON)
-botonJuegoNuevo = Boton.boton(ROJO, AZUL, screen, "JUGAR DE NUEVO", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
-                            ALTOCENTROVENTANA - 30, ANCHOBOTON + 110 , ALTOBOTON, BLANCO, -30, ANCHOCENTROVENTANA,
+botonVolver = Boton.boton(ROJO, AZUL, screen, "VOLVER AL MENU", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
+                            ALTOCENTROVENTANA +100, ANCHOBOTON + 110 , ALTOBOTON, BLANCO, 100, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
 
 botonCadaUnaEnSuLugar = Boton.boton(ROJO, AZUL, screen, "Cada uno en su lugar", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
@@ -111,6 +122,41 @@ def modificoArchivoLog(datosJson,nombre):
 		archivo= open(nombre, "w")
 		json.dump(datosJson,archivo)
 		archivo.close()
+def pantallaAcomodo():
+    """Carga la pantalla inicial del juego"""
+    pygame.display.flip()
+    screen.fill(random.choice(colores))
+    drawMensaje("elegi un juego!", 500, 50)
+    pygame.mixer.music.pause()	
+
+    while True:
+
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                terminate()
+            if (event.type == KEYUP):
+                if event.key == K_ESCAPE:
+                    terminate()
+
+        botonVolver.mostrarBoton()
+        botonConLetras.mostrarBoton()
+        botonConSilabas.mostrarBoton()
+        
+        if botonVolver.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            pantallaInicio()
+        if botonConLetras.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            nombre_usuario= suite.ingreso_usuario(13)
+            screen.fill(random.choice(colores))
+            suite.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+            acomodo_y_formo_letras.main(nombre_usuario)
+        if botonConSilabas.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            nombre_usuario= suite.ingreso_usuario(13)
+            screen.fill(random.choice(colores))
+            suite.drawMensaje("HOLA "+nombre_usuario+ " !",ANCHOCENTROVENTANA-ANCHOBOTON,ALTOCENTROVENTANA-ALTOBOTON)
+            acomodo_y_formo_con_silabas.main(nombre_usuario)
+
+        pygame.display.update()
 
 def pantallaInicio():
     """Carga la pantalla inicial del juego"""
@@ -131,7 +177,11 @@ def pantallaInicio():
         botonEntrometido.mostrarBoton()
         botonCadaUnaEnSuLugar.mostrarBoton()
         botonSalir.mostrarBoton()
-
+        botonAcomodoYFormo.mostrarBoton()
+        
+        if botonAcomodoYFormo.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
+            pantallaAcomodo()
+			
         if botonComeVocales.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
             come_vocales.main()
         if botonEntrometido.toca(getCursorPos()) and botonIzquierdoMouseClickeado():
@@ -273,40 +323,35 @@ def evaluar_lugar_letra(objeto,objeto_destino,event,color,puntos,consigna,msj,co
 		if ok:
 			for dato in args:
 				for valor in dato[1]:
-					if valor.rect.contains(objeto.rect)and pygame.mouse.get_pressed()[0] and ok and valor.nombre.lower()!=objeto.nombre.lower():
+					if valor.rect.contains(objeto.rect)and pygame.mouse.get_pressed()[0] and ok and str(valor.nombre).lower()!=str(objeto.nombre).lower():
 						puntos-=1
 						objeto.rect.topleft=objeto.rect_aux.topleft
 						ok=False
 						sonidoMal.play()
-					elif valor.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0] and ok and valor.nombre.lower()==objeto.nombre.lower():
+					elif valor.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0] and ok and str(valor.nombre).lower()==str(objeto.nombre).lower():
 						if objeto.arrastra:
 							objeto.arrastra=False
 							puntos+= 3
 							correcto=correcto+1
 							sonidoBien.play()
 		screen.fill(color)
+		
 		for obj in args:
-			if obj[0].nombre!=objeto.nombre:
-				for dato in obj[1]:
-						screen.blit(obj[0].image,obj[0].rect)
-						screen.blit(dato.image,dato.rect)
-				for dato in obj[2]:
-						screen.blit(dato.texto,dato.rect)
+			screen.blit(obj[0].image,obj[0].rect)
+			for dato in obj[1]:
+				screen.blit(dato.image,dato.rect)
+		for obj in args:
+			for dato in obj[2]:
+				screen.blit(dato.texto,dato.rect)
+		screen.blit(objeto.texto,objeto.rect)
 		drawScore(puntos)
 		drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
 		drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
-		screen.blit(objeto_destino.image, objeto_destino.rect)
 		if objeto.arrastra and ok:
 			objeto.handle_event(event,screen)
-		screen.blit(objeto.texto,objeto.rect)
-		pygame.display.flip()
 		clock.tick(260)
-#	if objeto_destino.rect.contains(objeto.rect):
-#		if objeto.arrastra:
-#			objeto.arrastra=False
-#			puntos+= 3
-#			correcto=correcto+1
-#			sonidoBien.play()
+		pygame.display.flip()
+		
 	return puntos,correcto
 
 
@@ -462,10 +507,86 @@ def inicializarImagenesCadaUno(dicc):
 		resta_ancho-= 280 
 		lista_sprites.append(lista_datos)
 	return lista_sprites
+def inicializarImagenesConSilabas(dicc):
+	"""retorna una lista con las imagenes del directorio"""
+	silabas = separasilabas.silabizer()
+	ancho_aux= (ancho_ventana/2)-300
+	alto_aux= 50
+	resta_ancho= ancho_ventana
+	lista_sprites=[]	#lista de los sprites para poder controlar los eventos
+	letra= list(dicc.keys())[0]     # almacena en letra la letra del direc.
+	lis= dicc[letra]				
+	alto_aux=300
+	valores=[]
+	dicc_aux={}
+	for imagen in lis:
+		dicc_aux[imagen]=[]
+		for dato in silabas(imagen.replace('.png', '')):
+			dicc_aux[imagen].append((50+ancho_aux+ancho_ventana-resta_ancho,alto_aux+300))
+			resta_ancho-= 70 
+	resta_ancho=ancho_ventana
+	resta_ancho_aux=resta_ancho
+	variable=1
+	for imagen in lis:
+		num_aux=0
+		lista_datos=[]
+		lis_letras=[]
+		lis_letras_rect=[]
+		if variable==1:
+			var=100
+			for dato in silabas(imagen.replace('.png', '')):
+				valor=random.choice(dicc_aux[imagen])
+				dicc_aux[imagen].remove(valor)
+				letra=Texto(valor, FUENTE_BASICA_2,str(dato), str(dato))
+				letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/silaba_rect.jpg",dato)
+				lis_letras.append(letra)
+				lis_letras_rect.append(letra_rect)
+				resta_ancho_aux-=40
+				var+=80
+		else:
+			if variable==2:
+				if len(imagen.replace('.png', ''))<5:
+					var=1050
+					for dato in silabas(imagen.replace('.png', '')):
+						valor=random.choice(dicc_aux[imagen])
+						dicc_aux[imagen].remove(valor)
+						letra=Texto(valor, FUENTE_BASICA_2,str(dato), str(dato))
+						letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/silaba_rect.jpg",dato)
+						lis_letras.append(letra)
+						lis_letras_rect.append(letra_rect)
+						resta_ancho_aux-=40
+						var+=80
+				else:
+					var=910
+					for dato in silabas(imagen.replace('.png', '')):
+						valor=random.choice(dicc_aux[imagen])
+						dicc_aux[imagen].remove(valor)
+						letra=Texto(valor, FUENTE_BASICA_2,str(dato), str(dato))
+						letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/silaba_rect.jpg",dato)
+						lis_letras.append(letra)
+						lis_letras_rect.append(letra_rect)
+						resta_ancho_aux-=40
+						var+=80
+					
+		variable+=1
+		resta_ancho_aux-=130
+		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
+		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
+		if len(imagen.replace('.png', '')) >5:
+			imagen= Imagen((num_aux/2+ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
+		else:
+			imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
+		lista_datos.append(imagen)
+		lista_datos.append(lis_letras_rect)
+		lista_datos.append(lis_letras)
+		resta_ancho-= 250 
+		lista_sprites.append(lista_datos)
+	return lista_sprites
+
 
 def inicializarImagenesLetras(dicc):
 	"""retorna una lista con las imagenes del directorio"""
-	ancho_aux= 50
+	ancho_aux= (ancho_ventana/2)-300
 	alto_aux= 50
 	resta_ancho= ancho_ventana
 	lista_sprites=[]	#lista de los sprites para poder controlar los eventos
@@ -477,33 +598,64 @@ def inicializarImagenesLetras(dicc):
 	for imagen in lis:
 		dicc_aux[imagen]=[]
 		for dato in imagen.replace('.png', ''):
-			dicc_aux[imagen].append((20+ancho_aux+ancho_ventana-resta_ancho,alto_aux+300))
+			dicc_aux[imagen].append((50+ancho_aux+ancho_ventana-resta_ancho,alto_aux+300))
 			resta_ancho-= 40 
-		resta_ancho -=170
 	resta_ancho=ancho_ventana
 	resta_ancho_aux=resta_ancho
+	variable=1
 	for imagen in lis:
+		num_aux=0
 		lista_datos=[]
 		lis_letras=[]
 		lis_letras_rect=[]
-		cant=0
-		for dato in imagen.replace('.png', ''):
-			valor=random.choice(dicc_aux[imagen])
-			dicc_aux[imagen].remove(valor)
-			letra=Texto(valor, FUENTE_BASICA_2,dato.upper(), dato.upper())
-			letra_rect=	Imagen((ancho_aux+ancho_ventana-resta_ancho_aux,alto_aux+200),DIRIMAGENES+"Letras/letra_rect.jpg",dato)
-			lis_letras.append(letra)
-			lis_letras_rect.append(letra_rect)
-			resta_ancho_aux-=40
-			cant+=50
+		if variable==1:
+			var=100
+			for dato in imagen.replace('.png', ''):
+				valor=random.choice(dicc_aux[imagen])
+				dicc_aux[imagen].remove(valor)
+				letra=Texto(valor, FUENTE_BASICA_2,dato.upper(), dato.upper())
+				letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/letra_rect.jpg",dato)
+				lis_letras.append(letra)
+				lis_letras_rect.append(letra_rect)
+				resta_ancho_aux-=40
+				var+=40
+		else:
+			if variable==2:
+				if len(imagen.replace('.png', ''))<5:
+					var=1050
+					for dato in imagen.replace('.png', ''):
+						valor=random.choice(dicc_aux[imagen])
+						dicc_aux[imagen].remove(valor)
+						letra=Texto(valor, FUENTE_BASICA_2,dato.upper(), dato.upper())
+						letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/letra_rect.jpg",dato)
+						lis_letras.append(letra)
+						lis_letras_rect.append(letra_rect)
+						resta_ancho_aux-=40
+						var+=40
+				else:
+					var=910
+					for dato in imagen.replace('.png', ''):
+						valor=random.choice(dicc_aux[imagen])
+						dicc_aux[imagen].remove(valor)
+						letra=Texto(valor, FUENTE_BASICA_2,dato.upper(), dato.upper())
+						letra_rect=	Imagen((var,alto_aux+200),DIRIMAGENES+"Letras/letra_rect.jpg",dato)
+						lis_letras.append(letra)
+						lis_letras_rect.append(letra_rect)
+						resta_ancho_aux-=40
+						var+=40
+					
+		variable+=1
 		resta_ancho_aux-=130
 		char= imagen[0].upper()                #agarro la primera letra de la imagen, para saber en q directorio buscar
 		ruta= DIRIMAGENES+char+"/"+imagen        #modifico directorio pq sino no encuentra la imagen, 
-		imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
+		if len(imagen.replace('.png', '')) >5:
+			imagen= Imagen((num_aux/2+ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
+		else:
+			imagen= Imagen((ancho_aux+ancho_ventana-resta_ancho, alto_aux - 100), ruta, imagen)
 		lista_datos.append(imagen)
 		lista_datos.append(lis_letras_rect)
 		lista_datos.append(lis_letras)
-		resta_ancho-= 370 
+		resta_ancho-= 250 
 		lista_sprites.append(lista_datos)
 	return lista_sprites
 
