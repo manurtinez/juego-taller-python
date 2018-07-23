@@ -21,7 +21,7 @@ NEGRO= (0, 0, 0)
 
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
-pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
+pygame.display.set_icon(pygame.image.load("../imagenes/Letras/a_letra_A.png"))
 
 ancho_ventana = 1320
 alto_ventana = 720
@@ -37,20 +37,20 @@ ALTOBOTON=50
 ANCHOCENTROVENTANA= ancho_ventana / 2
 ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
-FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+FUENTECONSIGNA = pygame.font.Font("../fuentes/A.C.M.E. Explosive.ttf", 30)
 
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 
-DIRIMAGENES= "./imagenes/"
+DIRIMAGENES= "../imagenes/"
 
-LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./imagenes/O/", "./imagenes/U/"] 
+LISTA_DIR_IMAGENES= ["../imagenes/A/", "../imagenes/E/", "../imagenes/I/", "../imagenes/O/", "../imagenes/U/"] 
 
 diccionario_imagenes= {}
 
 pygame.mixer.music.set_volume(0.5)
-sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
-sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
-pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
+sonidoBien = pygame.mixer.Sound('../sonidos/109662__grunz__success.wav')
+sonidoMal = pygame.mixer.Sound('../sonidos/366107__original-sound__error_sound.wav')
+pygame.mixer.music.load('../sonidos/432367__a-c-acid__fast-ukulele.mp3')
 
 
 def main():	

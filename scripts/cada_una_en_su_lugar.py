@@ -8,7 +8,6 @@ from itertools import cycle
 import random
 import time
 import json
-import separasilabas
  
 
 ROJOCLARO = (255,   0,   0)
@@ -23,7 +22,7 @@ NEGRO= (0, 0, 0)
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 
 pygame.init()
-pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
+pygame.display.set_icon(pygame.image.load("../imagenes/Letras/a_letra_A.png"))
 
 ancho_ventana = 1320
 alto_ventana = 720
@@ -40,21 +39,21 @@ ALTOBOTON=50
 ANCHOCENTROVENTANA= ancho_ventana / 2
 ALTOCENTROVENTANA= alto_ventana / 2
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
-FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+FUENTECONSIGNA = pygame.font.Font("../fuentes/A.C.M.E. Explosive.ttf", 30)
 
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 
-DIRIMAGENES= "./imagenes/"
+DIRIMAGENES= "../imagenes/"
 
-LISTA_DIR_IMAGENES= ["./imagenes/A/", "./imagenes/E/", "./imagenes/I/", "./imagenes/O/", "./imagenes/U/"] 
+LISTA_DIR_IMAGENES= ["../imagenes/A/", "../imagenes/E/", "../imagenes/I/", "../imagenes/O/", "../imagenes/U/"] 
 
 
 diccionario_imagenes= {}
 
 pygame.mixer.music.set_volume(0.5)
-sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
-sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
-pygame.mixer.music.load('./sonidos/432367__a-c-acid__fast-ukulele.mp3')
+sonidoBien = pygame.mixer.Sound('../sonidos/109662__grunz__success.wav')
+sonidoMal = pygame.mixer.Sound('../sonidos/366107__original-sound__error_sound.wav')
+pygame.mixer.music.load('../sonidos/432367__a-c-acid__fast-ukulele.mp3')
  
 
  
@@ -68,7 +67,9 @@ def main(nombre_usuario):
 	time.sleep(1)
 	while True and aux != 5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
-		lista_sprites= suite.inicializarImagenesConSilabas(dicc_actual)
+		lista_sprites= suite.inicializarImagenesCadaUno(dicc_actual)
+		copy = lista_sprites[1:]
+		random.shuffle(copy)
 		puntos=correrJuego(random.choice(colores),lista_sprites[0][0], lista_sprites , puntos)
 		time.sleep(0.5)
 		screen.fill(random.choice(colores))
@@ -91,8 +92,8 @@ def main(nombre_usuario):
 						"hora": time.strftime("%X")
 					}
 				]	
-	suite.modificoArchivoLog(datosJson,"logs_acomodo_y_formo_con_silaba.json")	
-	suite.pantallaLeaderboard("logs_acomodo_y_formo_con_silaba.json")
+	suite.modificoArchivoLog(datosJson,"logs_cada_uno_en_su_lugar.json")	
+	suite.pantallaLeaderboard("logs_cada_uno_en_su_lugar.json")
 	suite.drawMensaje("apreta enter para continuar", ancho_ventana/2, alto_ventana - 50)
 	pygame.display.flip()
 	while True:
@@ -105,19 +106,13 @@ def main(nombre_usuario):
 
 def correrJuego(color,letra,args,puntos):
 	"""loop del juego al clickear en iniciar"""
-	args[0][0].rect.topleft=(100,200)
-	args[1][0].rect.topleft=(1040,200)
-	silabas = separasilabas.silabizer()
 	puntosAnt=0
 	correcto=0
 	consigna = 'Coloca la palabra en su lugar!'
 	msj = ""
-	total=0
 	reproduccionMusica= True
 	suite.drawScore(puntos)
-	for valor in args:
-		total=total+len(silabas(valor[0].nombre.replace('.png', '')))
-	while True and correcto!=total:
+	while True and correcto!=3:
 		screen.fill(color)
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -135,27 +130,24 @@ def correrJuego(color,letra,args,puntos):
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
 				for objeto in args:
-					valor_lis=0
-					for valor in objeto[2]:
-						if valor.toca(x,y):
-							puntosAnt = puntos
-							tupla=suite.evaluar_lugar_letra(valor,objeto[1][valor_lis],event,color,puntos,consigna,msj,correcto,True,args)
-							puntos=tupla[0]
-							correcto=tupla[1]
-						valor_lis+=1
+					if objeto[2].toca(x,y):
+						puntosAnt = puntos
+						tupla=suite.evaluar_lugar(objeto[2],objeto[1],event,color,puntos,consigna,msj,correcto,True,args)
+						puntos=tupla[0]
+						correcto=tupla[1]
 		for objeto in args:
-			screen.blit(objeto[0].image, objeto[0].rect)
-			for i in objeto[1]:
-				screen.blit(i.image,i.rect)
-		for objeto in args:
-			for i in objeto[2]:
-				screen.blit(i.texto,i.rect)
+			if objeto[0].arrastra:
+				screen.blit(objeto[0].image, objeto[0].rect)
+				screen.blit(objeto[1].image,objeto[1].rect)
+				screen.blit(objeto[2].texto,objeto[2].rect)
 		suite.drawScore(puntos)
 		suite.drawMensaje(consigna, ancho_ventana-1250, alto_ventana-600)
 		suite.drawMensaje("esc: volver al menu, m: pausar musica", ancho_ventana-1280, alto_ventana-700)
 		
-		clock.tick(60)
+	#	screen.blit(letra.image, letra.rect)
 		pygame.display.flip()
+		clock.tick(60)
+
 	return puntos
 
 
@@ -165,7 +157,7 @@ def seleccionDeImagenes(dicc, aux):
 	lis=[]
 	dicc_aux={}
 	if aux == 0:
-		for i in range(2):
+		for i in range(3):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -174,7 +166,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 1:
-		for i in range(2):
+		for i in range(3):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -183,7 +175,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 2:
-		for i in range(2):
+		for i in range(3):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -192,7 +184,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 3:
-		for i in range(2):
+		for i in range(3):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -201,7 +193,7 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 	if aux == 4:
-		for i in range(2):
+		for i in range(3):
 			valor=random.choice(lis_aux)
 			imagen=random.sample(dicc[valor],1)[0]
 			lis.append(imagen)
@@ -210,4 +202,4 @@ def seleccionDeImagenes(dicc, aux):
 			
 		dicc_aux[1]= lis
 
-	return dicc_aux                                   
+	return dicc_aux                                      

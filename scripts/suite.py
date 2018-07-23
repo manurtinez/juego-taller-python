@@ -22,7 +22,7 @@ NEGRO= (0, 0, 0)
 
 colores=[ROJOCLARO,VERDECLARO,AZULCLARO,VERDE]
 pygame.init()
-pygame.display.set_icon(pygame.image.load("./imagenes/Letras/a_letra_A.png"))
+pygame.display.set_icon(pygame.image.load("../imagenes/Letras/a_letra_A.png"))
 
 ancho_ventana = 1320
 alto_ventana = 720
@@ -42,13 +42,13 @@ ALTOCENTROVENTANA= alto_ventana / 2
 
 
 FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
-FUENTECONSIGNA = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+FUENTECONSIGNA = pygame.font.Font("../fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
-DIRIMAGENES= "./imagenes/"
+DIRIMAGENES= "../imagenes/"
 
 
-sonidoBien = pygame.mixer.Sound('./sonidos/109662__grunz__success.wav')
-sonidoMal = pygame.mixer.Sound('./sonidos/366107__original-sound__error_sound.wav')
+sonidoBien = pygame.mixer.Sound('../sonidos/109662__grunz__success.wav')
+sonidoMal = pygame.mixer.Sound('../sonidos/366107__original-sound__error_sound.wav')
 
 botonAcomodoYFormo = Boton.boton(ROJO, AZUL, screen, "Acomodo y Formo", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
                             ALTOCENTROVENTANA - 240, ANCHOBOTON + 110, ALTOBOTON, BLANCO, -240, ANCHOCENTROVENTANA,
@@ -85,7 +85,7 @@ def pantallaLeaderboard(nombre):
 	"""muestra el puntaje maximo y quien lo realizo en pantalla""" 
 	puntaje_maximo= -1
 	nom_punt_max= ""
-	archivo= open(nombre, "r")
+	archivo= open("../logs/"+nombre, "r")
 	datos= json.load(archivo)
 	for partida in datos:
 		if partida["puntaje_maximo"] > puntaje_maximo:
@@ -99,7 +99,7 @@ def modificoArchivoLog(datosJson,nombre):
 	try:
 		ok= False
 		aux= False    			         #para saber si el puntaje actual es menor
-		archivo= open(nombre,"r")			#el archivo json debe tener por lo menos 1 dato
+		archivo= open("../logs/"+nombre,"r")			#el archivo json debe tener por lo menos 1 dato
 		datos_iguales= json.load(archivo)
 		datos_viejos= datos_iguales.copy()
 		for partida in datos_viejos:
@@ -109,7 +109,7 @@ def modificoArchivoLog(datosJson,nombre):
 					ok= True
 				else: 
 					aux= True                #significa que no supero su record
-		archivo= open(nombre, "w")
+		archivo= open("../logs/"+nombre, "w")
 		if ok:
 			json.dump(datos_viejos, archivo)
 		elif not(aux):
@@ -119,7 +119,7 @@ def modificoArchivoLog(datosJson,nombre):
 			json.dump(datos_iguales, archivo)
 		archivo.close()
 	except:
-		archivo= open(nombre, "w")
+		archivo= open("../logs/"+nombre, "w")
 		json.dump(datosJson,archivo)
 		archivo.close()
 def pantallaAcomodo():
@@ -401,7 +401,7 @@ def drawMensaje(msj, x, y):
 
 def ingreso_usuario(largo_max, lower = False, upper = False, title = False):
 	"""metodo para ingresar un nombre de usuario al iniciar la partida"""
-	FUENTE_NOMBRE_2 = pygame.font.Font("./fuentes/A.C.M.E. Explosive.ttf", 30)
+	FUENTE_NOMBRE_2 = pygame.font.Font("../fuentes/A.C.M.E. Explosive.ttf", 30)
 	cadena = ""
 	fin = False
 	valores_permitidos= [i for i in range(97, 123)] + [i for i in range(48,58)]
