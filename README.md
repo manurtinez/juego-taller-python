@@ -8,7 +8,7 @@ REQUISITOS
     
 INICIO
     
-    El script principal para iniciar el juego es "suite.py"
+    El script principal para iniciar el juego es "suite.py" y se encuentra dentro de la carpeta "Scripts"
     
     
 CONTRIBUYENTES
