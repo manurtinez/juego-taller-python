@@ -1,4 +1,11 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+#  sin título.py
+#  
+#  Copyright 2018 Authors: Ramirez Agustin, Martinez Manuel, Sandler Tomas
+#  
+#  
 import time, Boton, suite
 import sys
 import pygame

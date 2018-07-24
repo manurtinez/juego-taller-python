@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  sin título.py
+#  
+#  Copyright 2018 Authors: Ramirez Agustin, Martinez Manuel, Sandler Tomas
+#  
+#  
+
 class boton(object):
     """
     Esta clase boton contiene su inicializador, funciones de control, como si se pasa el cursor por el boton. Y tambien para colocar

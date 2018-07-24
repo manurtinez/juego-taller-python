@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  sin título.py
+#  
+#  Copyright 2018 Authors: Ramirez Agustin, Martinez Manuel, Sandler Tomas
+#  
+#  
+
 import come_vocales, pygame, el_entrometido, Boton, random, sys, cada_una_en_su_lugar, os,acomodo_y_formo_letras,acomodo_y_formo_con_silabas
 import time, Boton, suite
 import sys
