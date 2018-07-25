@@ -274,11 +274,10 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 				objeto.rect.topleft=objeto.rect_aux
 	return puntos,correcto
 
-def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args, argsImagen, dicc_grabaciones= cargoGrabaciones()):
+def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args, dicc_grabaciones= cargoGrabaciones()):
 	"""evalua si el texto colisiona con el rectangulo o no"""
 	ok=True
 	tocoImagen= False
-	print (argsImagen)
 	while not objeto_destino.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0]and ok:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -302,11 +301,12 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 						ok=False
 						sonidoMal.play()
 		screen.fill(color)
-		for obj2 in argsImagen:
-			print (obj2)
-			if obj2.toca(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) and botonIzquierdoMouseClickeado() and not tocoImagen:
+		for obj2 in args:
+			x,y =pygame.mouse.get_pos()
+			if obj2[0].toca(x,y) and botonIzquierdoMouseClickeado() and not tocoImagen:
 				if not pygame.mixer.get_busy():
-					dicc_grabaciones[obj2.nombre[:-4]].play()
+					dicc_grabaciones[obj2[0].nombre[:-4]].play()
+				tocoImagen=True
 		for obj in args:
 			if obj[0].nombre!=objeto.nombre: 
 				if obj[1].arrastra:
@@ -385,7 +385,6 @@ def evaluar_lugar_letra(objeto,objeto_destino,event,color,puntos,consigna,msj,co
 def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args, dicc_grabaciones= cargoGrabaciones()):
 	"""evalua si la imagen colisionada corresponde con la letra o no"""
 	tocoImagen= False
-	print (args)
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -402,7 +401,6 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,repro
 						reproduccionMusica= True
 		screen.fill(color)
 		for obj in args:
-			print (obj)
 			if obj.toca(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) and botonIzquierdoMouseClickeado() and not tocoImagen:
 				if not pygame.mixer.get_busy():
 					dicc_grabaciones[obj.nombre[:-4]].play()

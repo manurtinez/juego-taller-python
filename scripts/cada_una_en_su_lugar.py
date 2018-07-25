@@ -137,7 +137,7 @@ def correrJuego(color,letra,args,puntos):
 			x,y=pygame.mouse.get_pos()
 			if pygame.mouse.get_pressed()[0]:
 				for objeto in args:
-					if objeto[2].toca(x,y):
+					if objeto[2].toca(x,y) or objeto[0].toca(x,y):
 						puntosAnt = puntos
 						tupla=suite.evaluar_lugar(objeto[2],objeto[1],event,color,puntos,consigna,msj,correcto,True,args)
 						puntos=tupla[0]
