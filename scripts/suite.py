@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  sin título.py
+#  suite.py
 #  
 #  Copyright 2018 Authors: Ramirez Agustin, Martinez Manuel, Sandler Tomas
 #  
