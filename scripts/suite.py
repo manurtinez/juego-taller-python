@@ -54,6 +54,7 @@ FUENTEBOTON=pygame.font.SysFont("comicsansms", 25)
 FUENTECONSIGNA = pygame.font.Font("../fuentes/A.C.M.E. Explosive.ttf", 30)
 screen = pygame.display.set_mode((ancho_ventana, alto_ventana))
 DIRIMAGENES= "../imagenes/"
+DIRGRABACIONES= "../sonidos/grabados/"
 
 
 sonidoBien = pygame.mixer.Sound('../sonidos/109662__grunz__success.wav')
@@ -88,6 +89,7 @@ botonVolver = Boton.boton(ROJO, AZUL, screen, "VOLVER AL MENU", ANCHOCENTROVENTA
 botonCadaUnaEnSuLugar = Boton.boton(ROJO, AZUL, screen, "Cada uno en su lugar", ANCHOCENTROVENTANA - (ANCHOBOTON / 2) - 55,
                             ALTOCENTROVENTANA - 170, ANCHOBOTON + 110 , ALTOBOTON, BLANCO, -170, ANCHOCENTROVENTANA,
                             ALTOCENTROVENTANA, FUENTEBOTON)
+
 
 
 def pantallaLeaderboard(nombre):
@@ -131,6 +133,14 @@ def modificoArchivoLog(datosJson,nombre):
 		archivo= open("../logs/"+nombre, "w")
 		json.dump(datosJson,archivo)
 		archivo.close()
+
+def cargoGrabaciones():
+	dicc_grabaciones={}
+	for sonido in os.listdir(DIRGRABACIONES):
+		dicc_grabaciones[sonido[:-4]]= pygame.mixer.Sound(DIRGRABACIONES+sonido)          
+	return dicc_grabaciones
+
+
 def pantallaAcomodo():
     """Carga la pantalla inicial del juego"""
     pygame.display.flip()
@@ -263,9 +273,12 @@ def evaluarTacho(tacho,objeto,objeto_destino,event,color,puntos,consigna,msj,cor
 				puntos-= 1
 				objeto.rect.topleft=objeto.rect_aux
 	return puntos,correcto
-def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+
+def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args, argsImagen, dicc_grabaciones= cargoGrabaciones()):
 	"""evalua si el texto colisiona con el rectangulo o no"""
 	ok=True
+	tocoImagen= False
+	print (argsImagen)
 	while not objeto_destino.rect.contains(objeto.rect) and pygame.mouse.get_pressed()[0]and ok:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -289,6 +302,11 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 						ok=False
 						sonidoMal.play()
 		screen.fill(color)
+		for obj2 in argsImagen:
+			print (obj2)
+			if obj2.toca(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) and botonIzquierdoMouseClickeado() and not tocoImagen:
+				if not pygame.mixer.get_busy():
+					dicc_grabaciones[obj2.nombre[:-4]].play()
 		for obj in args:
 			if obj[0].nombre!=objeto.nombre: 
 				if obj[1].arrastra:
@@ -364,8 +382,10 @@ def evaluar_lugar_letra(objeto,objeto_destino,event,color,puntos,consigna,msj,co
 	return puntos,correcto
 
 
-def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
+def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args, dicc_grabaciones= cargoGrabaciones()):
 	"""evalua si la imagen colisionada corresponde con la letra o no"""
+	tocoImagen= False
+	print (args)
 	while not objeto_destino.rect.colliderect(objeto.rect) and pygame.mouse.get_pressed()[0]:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -382,6 +402,11 @@ def evaluar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,repro
 						reproduccionMusica= True
 		screen.fill(color)
 		for obj in args:
+			print (obj)
+			if obj.toca(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) and botonIzquierdoMouseClickeado() and not tocoImagen:
+				if not pygame.mixer.get_busy():
+					dicc_grabaciones[obj.nombre[:-4]].play()
+				tocoImagen= True
 			if obj.arrastra:
 				screen.blit(obj.image,obj.rect)
 		drawScore(puntos)
@@ -675,6 +700,7 @@ def terminate():
 	sys.exit()
 
 if __name__ == "__main__":
+	cargoGrabaciones()
 	screen.fill(random.choice(colores))
 	pygame.mixer.music.play(-1, 0.0)
 	pantallaInicio()

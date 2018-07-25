@@ -75,6 +75,7 @@ def main():
 	time.sleep(1)
 	while True and aux!=5:           
 		dicc_actual= seleccionDeImagenes(diccionario_imagenes, aux)
+		print (dicc_actual)
 		lista_sprites= suite.inicializarImagenes(dicc_actual)
 		copy = lista_sprites[1:]
 		random.shuffle(copy)
