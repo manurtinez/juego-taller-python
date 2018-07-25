@@ -142,7 +142,7 @@ def cargoGrabaciones():
 
 
 def pantallaAcomodo():
-    """Carga la pantalla inicial del juego"""
+    """Carga la pantalla de acomodo y formo para elegir o silabas o letras"""
     pygame.display.flip()
     screen.fill(random.choice(colores))
     drawMensaje("elegi un juego!", 500, 50)
@@ -331,7 +331,7 @@ def evaluar_lugar(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto
 	return puntos,correcto
 
 def evaluar_lugar_letra(objeto,objeto_destino,event,color,puntos,consigna,msj,correcto,reproduccionMusica, args):
-	"""evalua si el texto colisiona con el rectangulo o no"""
+	"""evalua si la letra colisiona con el rectangulo o no"""
 	ok=True
 	while pygame.mouse.get_pressed()[0]and ok:
 		for event in pygame.event.get():
@@ -510,7 +510,7 @@ def inicializarImagenes(dicc):
 	return lista_sprites
 
 def inicializarImagenesCadaUno(dicc):
-	"""retorna una lista con las imagenes del directorio"""
+	"""iniciaiza todos los sprites en pantalla y retorna una lista de sprites, donde cada elemento es una lista con 3 objetos"""
 	ancho_aux= 300
 	alto_aux= 50
 	resta_ancho= ancho_ventana
@@ -617,7 +617,7 @@ def inicializarImagenesConSilabas(dicc):
 
 
 def inicializarImagenesLetras(dicc):
-	"""retorna una lista con las imagenes del directorio"""
+	"""retorna una lista con las imagenes del directorio, donde cada elemento es una lista con 3 elementos"""
 	ancho_aux= (ancho_ventana/2)-300
 	alto_aux= 50
 	resta_ancho= ancho_ventana

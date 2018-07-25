@@ -165,7 +165,7 @@ def correrJuego(color,letra,args,puntos):
 
 
 def seleccionDeImagenes(dicc, aux):
-	"""retorna diccionario cargado con 5 imagenes aleatorias"""
+	"""retorna diccionario cargado con 2 imagenes aleatorias"""
 	lis_aux=["A","E","I","O","U"]
 	lis=[]
 	dicc_aux={}
